@@ -21,6 +21,6 @@ public class proofOfFrameworkIT {
     public void healthCheckIsResponsive() {
         logger.info("Verifying that the health check page is returning 200");
         String baseUrl = testProps.getAppUrl();
-        Assert.assertEquals(Unirest.get(baseUrl + "/healthcheck").asJson().getStatus(), 200);
+        Assert.assertEquals(Unirest.get(baseUrl + "/actuator/health").asJson().getStatus(), 200);
     }
 }
