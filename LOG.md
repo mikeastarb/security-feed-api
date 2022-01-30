@@ -53,7 +53,7 @@ Below are the overall steps I plan to take to get to a point where I can begin i
 * Begin a README that details the top file/folder structures found in this repo (keep this updating all the time)
 * Create a skeleton/empty SpringBoot Java project that can compile, run, and produce some form of HTTP output that can be verified (healthcheck)
 * Create the foundation of an E2E test suite that attempts to connect to a running version of the app and verify that the health check is correct
-  * E2E tests for now will be configured to run against localhost, but should be extendible out to running against deployed environments, like a QA location
+  * E2E tests for now will be configured to run against localhost, but should be extendable out to running against deployed environments, like a QA location
 * Create the foundation of a Unit test suite that runs a simple test that can be configured to pass or fail at runtime (reason below)
 * Create a build pipeline for Travis CI that fails if any Unit or E2E tests fail (test this by giving it a configuration that will fail the unit test)
 
@@ -77,3 +77,8 @@ Next, I'll take a TDD/ATDD approach to building out what would be needed for my 
 * Modify the data source abstraction layer so it could be configured by the environment for different feeds and processing. These feeds have a lot of commonality in how they are read and how they're generally parsed. If we could provide a mapping for a given feed from their data format to ours, the URL of that feed with any authentication/authorization information, and interval that the feed refreshes, we could put that into a configuration file for each feed, then have the system create multiple parsers on boot (or even better hot swap configurations as they're added, removed, edited without need for a reboot)
 * Functional Testing - Once this application was deployed into a real environment, we would want to re-run the E2E tests against that deployed location as well as any other Functional or System Integration Tests that may be doing additional checks that the system is interacting with the correct environments, etc. Ideally this layer would be small, but would likely still exist
 * Data Persistence Layer - For this initial implementation, I'll be keeping data in-memory only and culling information after it's been in the system for 12 hours to keep memory usage under semi-control. In a real application, we would be reading/storing information into a data persistence layer like MySQL/Postgres/Mongo or even right to a file system either locally or to something like S3. When considering this, we would want to consider how much information is kept in memory on the system for speed and how much we would flush to and read from disk to maintain our own log of information
+
+# Development Log
+
+* Setup is starting to get underway with the e2e suite getting logging handled and tests running, but currently failing. The basic structure is something I'm pulling from my experience writing these kinds of suites in my current job
+* Got a simple springboot app running with actuators so test should be passing but it's not
