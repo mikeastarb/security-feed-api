@@ -82,5 +82,9 @@ Next, I'll take a TDD/ATDD approach to building out what would be needed for my 
 
 * Setup is starting to get underway with the e2e suite getting logging handled and tests running, but currently failing. The basic structure is something I'm pulling from my experience writing these kinds of suites in my current job
 * Got a simple springboot app running with actuators so test should be passing, but it's not
-* Refactored the project to reduce the complexity of setup. The overall cost is that the e2e suite will not be able to run as a regular Spring integration test and a test against a deployed environment without futher configuration. This is always something that can be added later
+* Refactored the project to reduce the complexity of setup. The overall cost is that the e2e suite will not be able to run as a regular Spring integration test and a test against a deployed environment without further configuration. This is always something that can be added later
 * Getting things setup with Travis for builds/tests on push to the repo. Once here, we can start adding the core features in
+* Need to rethink a bit about how to approach things from here since there won't be opportunity to inject a file into the system
+  * Thinking about first setting up static data to be returned; that tests the return pipeline
+  * Then we can add an injection end-point that, in a PROD system, would ideally be locked out to non-admins but in practice would probably be locked by a configuration. There could be a valid use case for having something so the admins can inject items into the system in PROD; trying not to write/design system features just for testing
+  * Once we can inject, we write tests to verify the injection, which is done by verifying the read

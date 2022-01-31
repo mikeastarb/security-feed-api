@@ -8,18 +8,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class healthCheckIT {
-    private static final Logger logger = LoggerFactory.getLogger(healthCheckIT.class);
+public class HealthCheckIT {
+    private static final Logger logger = LoggerFactory.getLogger(HealthCheckIT.class);
 
     @LocalServerPort
     private int port;
 
     @Test
     public void healthCheckIsResponsive() {
-        logger.info("Verifying that the health check page is returning 200");
-        assertEquals(Unirest.get("http://localhost:" + port + "/actuator/health").asJson().getStatus(), 200);
+        assertThat(Unirest.get("http://localhost:" + port + "/actuator/health").asJson().getStatus()).isEqualTo(200);
+    }
+
+    @Test
+    public void swaggerDocsAreAvailable() {
+        assertThat(Unirest.get("http://localhost:" + port + "/swagger-ui.html").asString().getStatus()).isEqualTo(200);
     }
 }
