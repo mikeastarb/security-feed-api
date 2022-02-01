@@ -35,5 +35,17 @@ public class IncidentsIT {
         // TODO: Refactor this to inject incident data via API call
         IncidentListResponse response = Unirest.get("http://localhost:" + port + "/incidents").asObject(IncidentListResponse.class).getBody();
         Incident firstIncident = response.getIncidents().get(0);
+        Incident secondIncident = response.getIncidents().get(1);
+
+        assertThat(firstIncident.getSourceID()).isEqualTo("test");
+        assertThat(firstIncident.getSourceCode()).isEqualTo("CUSTOM");
+        assertThat(firstIncident.getReferences()).containsExactly("https://test.org/1");
+        assertThat(firstIncident.getDescription()).isEqualTo("Test Description");
+        assertThat(firstIncident.getPublishedDate()).isEqualTo("2022-02-01T16:15Z");
+        assertThat(firstIncident.getLastModifiedDate()).isEqualTo("2022-02-01T16:15Z");
+        assertThat(firstIncident.getLatitude()).isNull();
+        assertThat(firstIncident.getLongitude()).isNull();
+
+        assertThat(secondIncident.getSourceID()).isEqualTo("test");
     }
 }

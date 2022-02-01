@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class IncidentListResponse {
-    private List<Incident> incidents = Arrays.asList(new Incident());
+    private List<Incident> incidents = Arrays.asList(new Incident(), new Incident());
 
     public List<Incident> getIncidents() {
         return incidents;
