@@ -1,5 +1,6 @@
 package com.astarbia.securityapi.controller;
 
+import com.astarbia.securityapi.model.response.IncidentListResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class IncidentsController {
 
     @GetMapping(value = "/incidents", produces= { "application/json" })
-    public String getAllIncidents() {
-        return "true";
+    public IncidentListResponse getAllIncidents() {
+        return new IncidentListResponse();
     }
 }
