@@ -1,38 +1,82 @@
 package com.astarbia.securityapi.model;
 
-import java.util.Arrays;
+import com.astarbia.securityapi.exception.RangeOutOfBoundsException;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Incident {
+
+    private final String sourceID;
+    private final String sourceCode;
+    private String description;
+    private String publishedDate;
+    private String lastModifiedDate;
+    private List<String> references;
+    private Double latitude;
+    private Double longitude;
+
+    public Incident(String sourceID, String sourceCode, String description, String publishedDate, String lastModifiedDate) {
+        this.sourceID = sourceID;
+        this.sourceCode = sourceCode;
+        this.description = description;
+        this.publishedDate = publishedDate;
+        this.lastModifiedDate = lastModifiedDate;
+        this.references = new ArrayList<>();
+        this.latitude = null;
+        this.longitude = null;
+    }
+
+    public void setLatitude(double latitude) throws RangeOutOfBoundsException {
+        if(latitude < -90.0 || 90.0 < latitude) {
+            throw new RangeOutOfBoundsException();
+        }
+        this.latitude = latitude;
+    }
+
     public String getSourceID() {
-        return "test";
+        return sourceID;
     }
 
     public String getSourceCode() {
-        return "CUSTOM";
-    }
-
-    public List<String> getReferences() {
-        return Arrays.asList("https://test.org/1");
+        return sourceCode;
     }
 
     public String getDescription() {
-        return "Test Description";
+        return description;
     }
 
     public String getPublishedDate() {
-        return "2022-02-01T16:15Z";
+        return publishedDate;
     }
 
     public String getLastModifiedDate() {
-        return "2022-02-01T16:15Z";
+        return lastModifiedDate;
     }
 
-    public Long getLatitude() {
-        return null;
+    public List<String> getReferences() {
+        return references;
     }
 
-    public Long getLongitude() {
-        return null;
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Incident incident = (Incident) o;
+        return Objects.equals(sourceID, incident.sourceID) && Objects.equals(sourceCode, incident.sourceCode) && Objects.equals(description, incident.description) && Objects.equals(publishedDate, incident.publishedDate) && Objects.equals(lastModifiedDate, incident.lastModifiedDate) && Objects.equals(references, incident.references) && Objects.equals(latitude, incident.latitude) && Objects.equals(longitude, incident.longitude);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sourceID, sourceCode, description, publishedDate, lastModifiedDate, references, latitude, longitude);
     }
 }

@@ -48,4 +48,9 @@ public class IncidentsIT {
 
         assertThat(secondIncident.getSourceID()).isEqualTo("test");
     }
+
+    @Test
+    public void postingNewIncidentRequiresMinimalInformation() {
+        Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z");
+    }
 }
