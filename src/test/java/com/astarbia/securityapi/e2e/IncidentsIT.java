@@ -25,6 +25,8 @@ public class IncidentsIT {
         // TODO: Refactor this to inject incident data via API call
         JSONObject responseJson = Unirest.get("http://localhost:" + port + "/incidents").asJson().getBody().getObject();
         int incidentResponseCount = responseJson.getInt("totalIncidents");
-        assertThat(incidentResponseCount).isEqualTo(2);
+
+        int incidentsCount = responseJson.getJSONArray("incidents").length();
+        assertThat(incidentResponseCount).isEqualTo(incidentsCount);
     }
 }
