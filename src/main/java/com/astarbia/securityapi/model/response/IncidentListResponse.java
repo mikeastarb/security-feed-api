@@ -13,6 +13,6 @@ public class IncidentListResponse {
     }
 
     public int getTotalIncidents() {
-        return 0;
+        return incidents.size();
     }
 }
