@@ -29,4 +29,11 @@ public class IncidentsIT {
         IncidentListResponse response = Unirest.get("http://localhost:" + port + "/incidents").asObject(IncidentListResponse.class).getBody();
         assertThat(response.getTotalIncidents()).isEqualTo(response.getIncidents().size());
     }
+
+    @Test
+    public void incidentReadEndpointReturnsIncidentData() {
+        // TODO: Refactor this to inject incident data via API call
+        IncidentListResponse response = Unirest.get("http://localhost:" + port + "/incidents").asObject(IncidentListResponse.class).getBody();
+        Incident firstIncident = response.getIncidents().get(0);
+    }
 }
