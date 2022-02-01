@@ -10,7 +10,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IncidentReadIT {
+public class IncidentsIT {
 
     @LocalServerPort
     private int port;
@@ -21,10 +21,10 @@ public class IncidentReadIT {
     }
 
     @Test
-    public void incidentReadEndpointReturnsListOfIncidents() {
-        // TODO: Refactor this to inject incident data via API call; move to an Insert incident test
+    public void incidentReadEndpointReturnsCountOfIncidentsInResponse() {
+        // TODO: Refactor this to inject incident data via API call
         JSONObject responseJson = Unirest.get("http://localhost:" + port + "/incidents").asJson().getBody().getObject();
-
         int incidentResponseCount = responseJson.getInt("totalIncidents");
+        assertThat(incidentResponseCount).isEqualTo(2);
     }
 }
