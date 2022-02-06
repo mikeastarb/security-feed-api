@@ -4,8 +4,6 @@ import com.astarbia.securityapi.Application;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.model.response.IncidentListResponse;
 import kong.unirest.Unirest;
-import kong.unirest.json.JSONArray;
-import kong.unirest.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -50,7 +48,12 @@ public class IncidentsIT {
     }
 
     @Test
-    public void postingNewIncidentRequiresMinimalInformation() {
+    public void postEndpointForIncidentsIsResponsive() {
         Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z");
+        int responseCode = Unirest.post("http://localhost:" + port + "/incidents")
+                .body(incident)
+                .asJson()
+                .getStatus();
+        assertThat(responseCode).isEqualTo(200);
     }
 }
