@@ -24,14 +24,18 @@ public class IncidentsController {
     }
 
     @GetMapping(value = "/incidents", produces= { "application/json" })
-    public ResponseEntity<IncidentListResponse> getAllIncidents() {
+    public ResponseEntity getAllIncidents() {
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         incidentListResponse.setIncidents(incidentRepo.getIncidents());
         return new ResponseEntity<>(incidentListResponse, HttpStatus.OK);
     }
 
     @PostMapping(value = "/incidents", produces = { "application/json" })
-    public ResponseEntity<Incident> addNewIncident(@RequestBody Incident incident) throws DuplicateValueException {
-        return new ResponseEntity<>(incidentRepo.addIncident(incident), HttpStatus.CREATED);
+    public ResponseEntity addNewIncident(@RequestBody Incident incident) {
+        try {
+            return new ResponseEntity<>(incidentRepo.addIncident(incident), HttpStatus.CREATED);
+        } catch (DuplicateValueException e) {
+            return new ResponseEntity<>("An incident with the ID " + incident.getSourceID() + " already exists for " + incident.getSourceCode(), HttpStatus.ALREADY_REPORTED);
+        }
     }
 }

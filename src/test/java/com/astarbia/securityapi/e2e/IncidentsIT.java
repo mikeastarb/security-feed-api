@@ -121,13 +121,16 @@ public class IncidentsIT {
                 .contentType("application/json")
                 .asJson();
 
-        int secondStatus = Unirest.post("http://localhost:" + port + "/incidents")
+        HttpResponse<String> stringHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(second)
                 .contentType("application/json")
-                .asJson()
-                .getStatus();
+                .asString();
 
-        assertThat(secondStatus).isNotEqualTo(200);
+        assertThat(stringHttpResponse
+                .getStatus()).isEqualTo(208);
+        assertThat(stringHttpResponse.getBody()).contains("already exists");
+        assertThat(stringHttpResponse.getBody()).contains(randomIDString);
+        assertThat(stringHttpResponse.getBody()).contains("CUSTOM");
 
         IncidentListResponse getBody = Unirest.get("http://localhost:" + port + "/incidents")
                 .asObject(IncidentListResponse.class)
