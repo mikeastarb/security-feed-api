@@ -92,8 +92,6 @@ public class IncidentsIT {
         assertThat(incident).isIn(incidentList.getIncidents());
     }
 
-    // postingNewIncidentAddsOneIncidentToRepo
-
     @Test
     public void postIncidentWithTooFewDetailsFails() {
         String randomIDString = UUID.randomUUID().toString();
@@ -111,5 +109,29 @@ public class IncidentsIT {
         assertThat(randomIDString).isNotIn(incidentListResponse.getIncidents().stream().map(Incident::getSourceID));
     }
 
-    // cannotPostSameIncidentIDSourceCombinationTwice
+    @Test
+    public void cannotPostTheSameIncidentTwice() {
+        String randomIDString = UUID.randomUUID().toString();
+        Incident first = new Incident(randomIDString, "CUSTOM", "Something","Different", "Here");
+        Incident second = new Incident(randomIDString, "CUSTOM", "Testing", "Other", "Things");
+
+        Unirest.post("http://localhost:" + port + "/incidents")
+                .body(first)
+                .contentType("application/json")
+                .asJson();
+
+        int secondStatus = Unirest.post("http://localhost:" + port + "/incidents")
+                .body(second)
+                .contentType("application/json")
+                .asJson()
+                .getStatus();
+
+        assertThat(secondStatus).isNotEqualTo(200);
+
+        IncidentListResponse getBody = Unirest.get("http://localhost:" + port + "/incidents")
+                .asObject(IncidentListResponse.class)
+                .getBody();
+
+        assertThat(getBody.getIncidents().stream().filter(getIncident -> getIncident.getSourceID().equals(randomIDString)).count()).isEqualTo(1);
+    }
 }
