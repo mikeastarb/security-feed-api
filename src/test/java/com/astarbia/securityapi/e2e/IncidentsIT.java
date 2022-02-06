@@ -39,7 +39,7 @@ public class IncidentsIT {
 
         assertThat(firstIncident.getSourceID()).isEqualTo("test");
         assertThat(firstIncident.getSourceCode()).isEqualTo("CUSTOM");
-        assertThat(firstIncident.getReferences()).containsExactly("https://test.org/1");
+        assertThat(firstIncident.getReferences()).isEmpty();
         assertThat(firstIncident.getDescription()).isEqualTo("Test Description");
         assertThat(firstIncident.getPublishedDate()).isEqualTo("2022-02-01T16:15Z");
         assertThat(firstIncident.getLastModifiedDate()).isEqualTo("2022-02-01T16:15Z");
