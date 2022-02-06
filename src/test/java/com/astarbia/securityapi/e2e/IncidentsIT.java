@@ -83,6 +83,23 @@ public class IncidentsIT {
     }
 
     @Test
+    public void postedIncidentIsAvailableViaRead() {
+        Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "Test", "Test");
+        Unirest.post("http://localhost:" + port + "/incidents")
+                .body(incident)
+                .contentType("application/json")
+                .asJson();
+
+        IncidentListResponse incidentList = Unirest.get("http://localhost:" + port + "/incidents")
+                .asObject(IncidentListResponse.class)
+                .getBody();
+
+        assertThat(incident).isIn(incidentList.getIncidents());
+    }
+
+    // postingNewIncidentAddsOneIncidentToRepo
+
+    @Test
     public void postIncidentWithTooFewDetailsFails() {
         String incidentWithTooFewDetails = "{\"sourceID\":\"Test-123\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
         int status = Unirest.post("http://localhost:" + port + "/incidents")
@@ -94,4 +111,6 @@ public class IncidentsIT {
 
         //TODO: Also check that the incident ID did not get added
     }
+
+    // cannotPostSameIncidentIDSourceCombinationTwice
 }
