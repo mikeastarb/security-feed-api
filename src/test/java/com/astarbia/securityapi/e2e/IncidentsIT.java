@@ -6,6 +6,8 @@ import com.astarbia.securityapi.model.response.IncidentListResponse;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
@@ -26,30 +28,19 @@ public class IncidentsIT {
         assertThat(Unirest.get("http://localhost:" + port + "/incidents").asJson().getStatus()).isEqualTo(200);
     }
 
-    @Test
-    public void incidentReadEndpointReturnsCountOfIncidentsInResponse() {
-        // TODO: Refactor this to inject incident data via API call
+    @ParameterizedTest(name="{index} => entries={0}")
+    @ValueSource(ints = {0, 1, 2, 4})
+    public void incidentReadEndpointReturnsCountOfIncidentsInResponse(int entriesToAdd) {
+        for(int i = 0; i < entriesToAdd; i++) {
+            Incident incidentToAdd = new Incident(UUID.randomUUID().toString(), "CUSTOM", "Test", "Test", "Test");
+            Unirest.post("http://localhost:" + port + "/incidents")
+                    .body(incidentToAdd)
+                    .contentType("application/json")
+                    .asJson();
+        }
+
         IncidentListResponse response = Unirest.get("http://localhost:" + port + "/incidents").asObject(IncidentListResponse.class).getBody();
         assertThat(response.getTotalIncidents()).isEqualTo(response.getIncidents().size());
-    }
-
-    @Test
-    public void incidentReadEndpointReturnsIncidentData() {
-        // TODO: Refactor this to inject incident data via API call
-        IncidentListResponse response = Unirest.get("http://localhost:" + port + "/incidents").asObject(IncidentListResponse.class).getBody();
-        Incident firstIncident = response.getIncidents().get(0);
-        Incident secondIncident = response.getIncidents().get(1);
-
-        assertThat(firstIncident.getSourceID()).isEqualTo("test");
-        assertThat(firstIncident.getSourceCode()).isEqualTo("CUSTOM");
-        assertThat(firstIncident.getReferences()).isEmpty();
-        assertThat(firstIncident.getDescription()).isEqualTo("Test Description");
-        assertThat(firstIncident.getPublishedDate()).isEqualTo("2022-02-01T16:15Z");
-        assertThat(firstIncident.getLastModifiedDate()).isEqualTo("2022-02-01T16:15Z");
-        assertThat(firstIncident.getLatitude()).isNull();
-        assertThat(firstIncident.getLongitude()).isNull();
-
-        assertThat(secondIncident.getSourceID()).isEqualTo("test");
     }
 
     @Test
