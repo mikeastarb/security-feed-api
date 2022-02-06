@@ -35,7 +35,10 @@ public class Incident {
         this.latitude = latitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(double longitude) throws RangeOutOfBoundsException {
+        if(longitude < -180.0 || 180.0 < longitude) {
+            throw new RangeOutOfBoundsException();
+        }
         this.longitude = longitude;
     }
 
