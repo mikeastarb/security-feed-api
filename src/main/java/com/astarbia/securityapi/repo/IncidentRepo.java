@@ -2,10 +2,12 @@ package com.astarbia.securityapi.repo;
 
 import com.astarbia.securityapi.exception.DuplicateValueException;
 import com.astarbia.securityapi.model.Incident;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class IncidentRepo {
     private List<Incident> incidents = new ArrayList<>();
 

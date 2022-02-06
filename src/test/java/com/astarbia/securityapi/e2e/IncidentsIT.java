@@ -10,14 +10,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(com.astarbia.securityapi.repo.IncidentRepo.class)
 public class IncidentsIT {
 
     @LocalServerPort
@@ -28,10 +26,10 @@ public class IncidentsIT {
         assertThat(Unirest.get("http://localhost:" + port + "/incidents").asJson().getStatus()).isEqualTo(200);
     }
 
-    @ParameterizedTest(name="{index} => entries={0}")
+    @ParameterizedTest(name = "{index} => entries={0}")
     @ValueSource(ints = {0, 1, 2, 4})
     public void incidentReadEndpointReturnsCountOfIncidentsInResponse(int entriesToAdd) {
-        for(int i = 0; i < entriesToAdd; i++) {
+        for (int i = 0; i < entriesToAdd; i++) {
             Incident incidentToAdd = new Incident(UUID.randomUUID().toString(), "CUSTOM", "Test", "Test", "Test");
             Unirest.post("http://localhost:" + port + "/incidents")
                     .body(incidentToAdd)
@@ -57,8 +55,7 @@ public class IncidentsIT {
 
     @Test
     public void postIncidentReturnsIncidentCreated() {
-        Incident incident = new Incident(UUID.randomUUID().toString(),"CUSTOM", "This is a Description", "Test", "Test")
-        ;
+        Incident incident = new Incident(UUID.randomUUID().toString(), "CUSTOM", "This is a Description", "Test", "Test");
         HttpResponse<Incident> incidentHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incident)
                 .contentType("application/json")
@@ -108,7 +105,10 @@ public class IncidentsIT {
                 .getStatus();
         assertThat(status).isNotEqualTo(200);
 
-        //TODO: Also check that the incident ID did not get added
+        IncidentListResponse incidentListResponse = Unirest.get("http://localhost:" + port + "/incidents")
+                .asObject(IncidentListResponse.class)
+                .getBody();
+        assertThat(randomIDString).isNotIn(incidentListResponse.getIncidents().stream().map(Incident::getSourceID));
     }
 
     // cannotPostSameIncidentIDSourceCombinationTwice
