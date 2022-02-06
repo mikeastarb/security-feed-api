@@ -5,10 +5,12 @@ import kong.unirest.Unirest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(com.astarbia.securityapi.repo.IncidentRepo.class)
 public class HealthCheckIT {
 
     @LocalServerPort
