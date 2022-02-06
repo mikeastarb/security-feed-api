@@ -35,6 +35,9 @@ public class Incident {
         this.latitude = latitude;
     }
 
+    public void setLongitude(double longitude) {
+    }
+
     public String getSourceID() {
         return sourceID;
     }

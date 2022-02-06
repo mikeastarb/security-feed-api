@@ -13,7 +13,7 @@ public class IncidentTest {
     @ParameterizedTest(name = "{index} => latitude={0}")
     @ValueSource(doubles = {-90.1, 90.1})
     public void latitudeCannotBeSetOutOfBounds(double latitude) {
-        Incident incident = new Incident("test", "test", "test", "test", "test");
+        Incident incident = getTestIncident();
         assertThrows(RangeOutOfBoundsException.class, () -> {
             incident.setLatitude(latitude);
         });
@@ -22,8 +22,20 @@ public class IncidentTest {
     @ParameterizedTest(name = "{index} => latitude={0}")
     @ValueSource(doubles = {-90, 0, 90})
     public void latitudeCanBeSetInBounds(double latitude) throws RangeOutOfBoundsException {
-        Incident incident = new Incident("test", "test", "test", "test", "test");
+        Incident incident = getTestIncident();
         incident.setLatitude(latitude);
         assertThat(incident.getLatitude()).isEqualTo(latitude);
+    }
+
+    @ParameterizedTest(name = "{index => longitude={0}")
+    @ValueSource(doubles = {-180, 0, 180})
+    public void longitudeCanBeSetInBounds(double longitude) throws RangeOutOfBoundsException {
+        Incident incident = getTestIncident();
+        incident.setLongitude(longitude);
+        assertThat(incident.getLongitude()).isEqualTo(longitude);
+    }
+
+    private Incident getTestIncident() {
+        return new Incident("test", "test", "test", "test", "test");
     }
 }
