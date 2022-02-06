@@ -1,6 +1,7 @@
 package com.astarbia.securityapi.e2e;
 
 import com.astarbia.securityapi.Application;
+import com.astarbia.securityapi.exception.RangeOutOfBoundsException;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.model.response.IncidentListResponse;
 import kong.unirest.HttpResponse;
@@ -133,5 +134,20 @@ public class IncidentsIT {
                 .getBody();
 
         assertThat(getBody.getIncidents().stream().filter(getIncident -> getIncident.getSourceID().equals(randomIDString)).count()).isEqualTo(1);
+    }
+
+    @Test
+    public void addIncidentWithLocationData() throws RangeOutOfBoundsException {
+        Incident incident = new Incident(UUID.randomUUID().toString(), "test", "test", "test", "test");
+        incident.setLongitude(15);
+        incident.setLatitude(-23.4);
+
+        Incident response = Unirest.post("http://localhost:" + port + "/incidents")
+                .body(incident)
+                .contentType("application/json")
+                .asObject(Incident.class)
+                .getBody();
+
+        assertThat(response).isEqualTo(incident);
     }
 }
