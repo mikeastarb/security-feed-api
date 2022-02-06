@@ -3,6 +3,7 @@ package com.astarbia.securityapi.e2e;
 import com.astarbia.securityapi.Application;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.model.response.IncidentListResponse;
+import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,6 +53,7 @@ public class IncidentsIT {
         Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z");
         int responseCode = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incident)
+                .contentType("application/json")
                 .asJson()
                 .getStatus();
         assertThat(responseCode).isEqualTo(200);
@@ -60,10 +62,36 @@ public class IncidentsIT {
     @Test
     public void postIncidentReturnsIncidentCreated() {
         Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "Test", "Test");
-        Incident responseBody = Unirest.post("http://localhost:" + port + "/incidents")
+        HttpResponse<Incident> incidentHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incident)
-                .asObject(Incident.class)
-                .getBody();
-        assertThat(responseBody).isEqualTo(incident);
+                .contentType("application/json")
+                .asObject(Incident.class);
+        assertThat(incidentHttpResponse.getStatus()).isEqualTo(200);
+        assertThat(incidentHttpResponse.getBody()).isEqualTo(incident);
+    }
+
+    @Test
+    public void postIncidentWithMinimalDetails() {
+        String incidentWithMinimalDetailJson = "{\"sourceID\":\"Test-123\",\"sourceCode\":\"CUSTOM\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
+        Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "Test", "Test");
+        HttpResponse<Incident> incidentHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
+                .body(incidentWithMinimalDetailJson)
+                .contentType("application/json")
+                .asObject(Incident.class);
+        assertThat(incidentHttpResponse.getStatus()).isEqualTo(200);
+        assertThat(incidentHttpResponse.getBody()).isEqualTo(incident);
+    }
+
+    @Test
+    public void postIncidentWithTooFewDetailsFails() {
+        String incidentWithTooFewDetails = "{\"sourceID\":\"Test-123\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
+        int status = Unirest.post("http://localhost:" + port + "/incidents")
+                .body(incidentWithTooFewDetails)
+                .contentType("application/json")
+                .asJson()
+                .getStatus();
+        assertThat(status).isNotEqualTo(200);
+
+        //TODO: Also check that the incident ID did not get added
     }
 }
