@@ -86,4 +86,18 @@ public class Incident {
     public int hashCode() {
         return Objects.hash(sourceID, sourceCode, description, publishedDate, lastModifiedDate, references, latitude, longitude);
     }
+
+    @Override
+    public String toString() {
+        return "Incident{" +
+                "sourceID='" + sourceID + '\'' +
+                ", sourceCode='" + sourceCode + '\'' +
+                ", description='" + description + '\'' +
+                ", publishedDate='" + publishedDate + '\'' +
+                ", lastModifiedDate='" + lastModifiedDate + '\'' +
+                ", references=" + references +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }
