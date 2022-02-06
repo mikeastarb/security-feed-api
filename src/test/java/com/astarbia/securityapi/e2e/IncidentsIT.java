@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -52,7 +54,8 @@ public class IncidentsIT {
 
     @Test
     public void postEndpointForIncidentsIsResponsive() {
-        Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z");
+        Incident incident = new Incident(UUID.randomUUID().toString(),
+                "CUSTOM", "This is a Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z");
         int responseCode = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incident)
                 .contentType("application/json")
@@ -63,7 +66,8 @@ public class IncidentsIT {
 
     @Test
     public void postIncidentReturnsIncidentCreated() {
-        Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "Test", "Test");
+        Incident incident = new Incident(UUID.randomUUID().toString(),"CUSTOM", "This is a Description", "Test", "Test")
+        ;
         HttpResponse<Incident> incidentHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incident)
                 .contentType("application/json")
@@ -74,8 +78,9 @@ public class IncidentsIT {
 
     @Test
     public void postIncidentWithMinimalDetails() {
-        String incidentWithMinimalDetailJson = "{\"sourceID\":\"Test-123\",\"sourceCode\":\"CUSTOM\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
-        Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "Test", "Test");
+        String randomIDString = UUID.randomUUID().toString();
+        String incidentWithMinimalDetailJson = "{\"sourceID\":\"" + randomIDString + "\",\"sourceCode\":\"CUSTOM\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
+        Incident incident = new Incident(randomIDString, "CUSTOM", "This is a Description", "Test", "Test");
         HttpResponse<Incident> incidentHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incidentWithMinimalDetailJson)
                 .contentType("application/json")
@@ -86,7 +91,7 @@ public class IncidentsIT {
 
     @Test
     public void postedIncidentIsAvailableViaRead() {
-        Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "Test", "Test");
+        Incident incident = new Incident(UUID.randomUUID().toString(), "CUSTOM", "This is a Description", "Test", "Test");
         Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incident)
                 .contentType("application/json")
@@ -103,7 +108,8 @@ public class IncidentsIT {
 
     @Test
     public void postIncidentWithTooFewDetailsFails() {
-        String incidentWithTooFewDetails = "{\"sourceID\":\"Test-123\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
+        String randomIDString = UUID.randomUUID().toString();
+        String incidentWithTooFewDetails = "{\"sourceID\":\"" + randomIDString + "\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
         int status = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incidentWithTooFewDetails)
                 .contentType("application/json")
