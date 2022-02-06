@@ -2,14 +2,12 @@ package com.astarbia.securityapi.model.response;
 
 import com.astarbia.securityapi.model.Incident;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class IncidentListResponse {
-    private List<Incident> incidents = Arrays.asList(
-            new Incident("test", "CUSTOM", "Test Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z"),
-            new Incident("test", "CUSTOM", "Test Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z")
-    );
+    private List<Incident> incidents = Collections.emptyList();
 
     public List<Incident> getIncidents() {
         return incidents;
@@ -17,5 +15,9 @@ public class IncidentListResponse {
 
     public int getTotalIncidents() {
         return incidents.size();
+    }
+
+    public void setIncidents(List<Incident> incidents) {
+        this.incidents = incidents;
     }
 }

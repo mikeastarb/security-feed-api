@@ -23,7 +23,9 @@ public class IncidentsController {
 
     @GetMapping(value = "/incidents", produces= { "application/json" })
     public IncidentListResponse getAllIncidents() {
-        return new IncidentListResponse();
+        IncidentListResponse incidentListResponse = new IncidentListResponse();
+        incidentListResponse.setIncidents(incidentRepo.getIncidents());
+        return incidentListResponse;
     }
 
     @PostMapping(value = "/incidents", produces = { "application/json" })
