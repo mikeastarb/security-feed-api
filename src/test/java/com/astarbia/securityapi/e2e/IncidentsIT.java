@@ -97,12 +97,14 @@ public class IncidentsIT {
     public void postIncidentWithTooFewDetailsFails() {
         String randomIDString = UUID.randomUUID().toString();
         String incidentWithTooFewDetails = "{\"sourceID\":\"" + randomIDString + "\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
-        int status = Unirest.post("http://localhost:" + port + "/incidents")
+        HttpResponse<String> stringHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
                 .body(incidentWithTooFewDetails)
                 .contentType("application/json")
-                .asJson()
-                .getStatus();
-        assertThat(status).isNotEqualTo(200);
+                .asString();
+
+        assertThat(stringHttpResponse
+                .getStatus()).isEqualTo(400);
+        assertThat(stringHttpResponse.getBody()).isEqualTo("A required field was missing from the request body for a new incident");
 
         IncidentListResponse incidentListResponse = Unirest.get("http://localhost:" + port + "/incidents")
                 .asObject(IncidentListResponse.class)

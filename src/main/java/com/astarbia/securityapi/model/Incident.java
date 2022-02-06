@@ -18,10 +18,6 @@ public class Incident {
     private Double longitude;
 
     public Incident(String sourceID, String sourceCode, String description, String publishedDate, String lastModifiedDate) {
-        if(sourceID == null || sourceCode == null || description == null || publishedDate == null || lastModifiedDate == null) {
-            throw new NullPointerException("All values for Incident construction must be non null");
-        }
-
         this.sourceID = sourceID;
         this.sourceCode = sourceCode;
         this.description = description;
@@ -76,6 +72,10 @@ public class Incident {
 
     public Double getLongitude() {
         return longitude;
+    }
+
+    public boolean isValid() {
+        return sourceID != null && sourceCode != null && description != null && publishedDate != null && lastModifiedDate != null;
     }
 
     @Override

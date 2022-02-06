@@ -32,6 +32,9 @@ public class IncidentsController {
 
     @PostMapping(value = "/incidents", produces = { "application/json" })
     public ResponseEntity addNewIncident(@RequestBody Incident incident) {
+        if(!incident.isValid()) {
+            return new ResponseEntity<>("A required field was missing from the request body for a new incident", HttpStatus.BAD_REQUEST);
+        }
         try {
             return new ResponseEntity<>(incidentRepo.addIncident(incident), HttpStatus.CREATED);
         } catch (DuplicateValueException e) {
