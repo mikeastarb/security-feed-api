@@ -27,7 +27,7 @@ public class IncidentTest {
         assertThat(incident.getLatitude()).isEqualTo(latitude);
     }
 
-    @ParameterizedTest(name = "{index => longitude={0}")
+    @ParameterizedTest(name = "{index} => longitude={0}")
     @ValueSource(doubles = {-180, 0, 180})
     public void longitudeCanBeSetInBounds(double longitude) throws RangeOutOfBoundsException {
         Incident incident = getTestIncident();
