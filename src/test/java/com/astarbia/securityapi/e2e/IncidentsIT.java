@@ -51,7 +51,7 @@ public class IncidentsIT {
                 .contentType("application/json")
                 .asJson()
                 .getStatus();
-        assertThat(responseCode).isEqualTo(200);
+        assertThat(responseCode).isEqualTo(201);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class IncidentsIT {
                 .body(incident)
                 .contentType("application/json")
                 .asObject(Incident.class);
-        assertThat(incidentHttpResponse.getStatus()).isEqualTo(200);
+        assertThat(incidentHttpResponse.getStatus()).isEqualTo(201);
         assertThat(incidentHttpResponse.getBody()).isEqualTo(incident);
     }
 
@@ -74,7 +74,7 @@ public class IncidentsIT {
                 .body(incidentWithMinimalDetailJson)
                 .contentType("application/json")
                 .asObject(Incident.class);
-        assertThat(incidentHttpResponse.getStatus()).isEqualTo(200);
+        assertThat(incidentHttpResponse.getStatus()).isEqualTo(201);
         assertThat(incidentHttpResponse.getBody()).isEqualTo(incident);
     }
 

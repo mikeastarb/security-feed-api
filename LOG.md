@@ -88,3 +88,6 @@ Next, I'll take a TDD/ATDD approach to building out what would be needed for my 
   * Thinking about first setting up static data to be returned; that tests the return pipeline
   * Then we can add an injection end-point that, in a PROD system, would ideally be locked out to non-admins but in practice would probably be locked by a configuration. There could be a valid use case for having something so the admins can inject items into the system in PROD; trying not to write/design system features just for testing
   * Once we can inject, we write tests to verify the injection, which is done by verifying the read
+* Spent time adding tests for being able to add incidents via a POST call
+  * Our repository/data source currently is an in-memory list, and not a particularly fast one at the moment. In a production application we'd likely turn this into hibernate to communicate with a database
+  * Coverage of the unit tests is aimed towards finding bugs, which means they're looking at where logical things are taking place. Between E2E and Unit tests we do have full coverage
