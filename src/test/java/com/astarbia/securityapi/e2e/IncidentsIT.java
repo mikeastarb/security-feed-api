@@ -56,4 +56,14 @@ public class IncidentsIT {
                 .getStatus();
         assertThat(responseCode).isEqualTo(200);
     }
+
+    @Test
+    public void postIncidentReturnsIncidentCreated() {
+        Incident incident = new Incident("Test-123", "CUSTOM", "This is a Description", "Test", "Test");
+        Incident responseBody = Unirest.post("http://localhost:" + port + "/incidents")
+                .body(incident)
+                .asObject(Incident.class)
+                .getBody();
+        assertThat(responseBody).isEqualTo(incident);
+    }
 }

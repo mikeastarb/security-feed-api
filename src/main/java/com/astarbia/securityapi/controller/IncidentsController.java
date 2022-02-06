@@ -15,6 +15,6 @@ public class IncidentsController {
 
     @PostMapping(value = "/incidents", produces = { "application/json" })
     public void addNewIncident() {
-        
+
     }
 }
