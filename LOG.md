@@ -61,15 +61,15 @@ Next, I'll take a TDD/ATDD approach to building out what would be needed for my 
 
 * Create an E2E test for reading a feed from a local file in our own format. This gets the heart of the ETL system going in a simple case
   * In order to really test that the file is being read; have the test generate the file
-  * Also need a test that looks at how a malformatted file is handled - Healthcheck should be able to make notes of incoming feed statuses
+  * Also need a test that looks at how a mal-formatted file is handled - Healthcheck should be able to make notes of incoming feed statuses
 * As work begins to implement the controller, model, services, etc. for the application to actually do the work, start on a unit test suite
   * For unit testing, I'll aim for high coverage, but will be culling out tests that are not verifying anything of importance
 * Grow this into developing tests/components for accessing NVD directly and displaying the latest of their smallest data set
-* Add a feature so that results are held in memory for 12 hours and then be removed. E2E tests may not be able to really verify the 12 hour time, but a Unit Test would
+* -Add a feature so that results are held in memory for 12 hours and then be removed. E2E tests may not be able to really verify the 12 hour time, but a Unit Test would-
 * Add a feature for pagination in the results, to specify a page size and a page number - This would be useful for batching back-end calls and splitting up processing
-* Filter the incidents for date/time ranges
-* Simple text search for incident descriptions that contain a value
-* Sorting incidents by ID, date/time, description
+* -Filter the incidents for date/time ranges-
+* -Simple text search for incident descriptions that contain a value-
+* -Sorting incidents by ID, date/time, description-
 
 ## Additional Features to Consider but Not Implement
 
@@ -77,6 +77,13 @@ Next, I'll take a TDD/ATDD approach to building out what would be needed for my 
 * Modify the data source abstraction layer so it could be configured by the environment for different feeds and processing. These feeds have a lot of commonality in how they are read and how they're generally parsed. If we could provide a mapping for a given feed from their data format to ours, the URL of that feed with any authentication/authorization information, and interval that the feed refreshes, we could put that into a configuration file for each feed, then have the system create multiple parsers on boot (or even better hot swap configurations as they're added, removed, edited without need for a reboot)
 * Functional Testing - Once this application was deployed into a real environment, we would want to re-run the E2E tests against that deployed location as well as any other Functional or System Integration Tests that may be doing additional checks that the system is interacting with the correct environments, etc. Ideally this layer would be small, but would likely still exist
 * Data Persistence Layer - For this initial implementation, I'll be keeping data in-memory only and culling information after it's been in the system for 12 hours to keep memory usage under semi-control. In a real application, we would be reading/storing information into a data persistence layer like MySQL/Postgres/Mongo or even right to a file system either locally or to something like S3. When considering this, we would want to consider how much information is kept in memory on the system for speed and how much we would flush to and read from disk to maintain our own log of information
+
+### Items Dropped from Scope, but Good to Have
+
+* Data Caching - Hold some set of results in memory based on the time they were updated or published; most recent info is probably going to be the more useful info
+* Server-side Data Filtering - Setup data filtering via request so users can better select what they're returning
+* Description Searching - Users will likely want to be able to send search criteria to the system to filter for incidents they're interested in
+* Other Sorting Specification - Users will want to see data sorted in different ways
 
 # Development Log
 
@@ -95,3 +102,4 @@ Next, I'll take a TDD/ATDD approach to building out what would be needed for my 
 * Going to refactor the integration tests to use inheritance in order to share common setup
 * Tests being added for parsing and processing NVDCVE results with basic implementation and coverage at the unit and E2E layers
 * Final integration and testing complete with NVD's recent data feed
+* Beginning work on default sorting

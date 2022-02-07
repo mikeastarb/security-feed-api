@@ -5,6 +5,7 @@ import com.astarbia.securityapi.model.Incident;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Repository
@@ -17,6 +18,7 @@ public class IncidentRepo {
         }
 
         incidents.add(incident);
+        incidents.sort(Comparator.comparing(Incident::getPublishedDate).reversed());
         return incident;
     }
 

@@ -8,7 +8,7 @@ the underlying development ideas are
 
 ## Getting Started
 
-In order to build this project locally, you will need access to Maven and a JDK that is at least version 11
+In order to build this project locally, you will need Maven and a JDK that is at least version 11
 
 Once the project is checked out, you can start the application by either running com.astarbia.securityapi.Application in
 an IDE or by executing the following command
@@ -28,3 +28,9 @@ In order to execute the Unit and E2E tests of the software, you can either open 
 tools to run the suites, or you can invoke the following command on the command line
 
 `mvn verify`
+
+# API Usage
+
+The main functionality provided by this tool is the GET /incidents end-point which returns a set of information about
+different security incidents and CVEs. When the application is running, information about this end-point can be found
+in the swagger documentation at /swagger-ui.html

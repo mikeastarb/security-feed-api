@@ -12,6 +12,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -151,5 +154,17 @@ public class IncidentsIT extends IntTestBase {
                 .getBody();
 
         assertThat(response).isEqualTo(incident);
+    }
+
+    @Test
+    public void incidentsReturnLatestPublishedFirst() {
+        IncidentListResponse response = Unirest.get(buildUrl("/incidents"))
+                .asObject(IncidentListResponse.class)
+                .getBody();
+
+        List<Incident> expectedIncidents = new ArrayList<>(response.getIncidents());
+        expectedIncidents.sort(Comparator.comparing(Incident::getPublishedDate).reversed());
+
+        assertThat(response.getIncidents()).isEqualTo(expectedIncidents);
     }
 }
