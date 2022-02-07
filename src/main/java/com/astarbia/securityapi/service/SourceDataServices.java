@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class SourceDataServices {
 
-    private NvdService nvdService;
+    private NvdPopulatorService nvdPopulatorService;
 
-    public SourceDataServices(NvdService nvdService) {
-        this.nvdService = nvdService;
+    public SourceDataServices(NvdPopulatorService nvdPopulatorService) {
+        this.nvdPopulatorService = nvdPopulatorService;
     }
 
     public void refreshAllDataSources() {
-        this.nvdService.refreshNvds();
+        this.nvdPopulatorService.refreshNvds();
     }
 }

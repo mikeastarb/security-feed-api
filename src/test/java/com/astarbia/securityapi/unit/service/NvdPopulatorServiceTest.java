@@ -4,7 +4,7 @@ import com.astarbia.securityapi.unit.NvdSampleService;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.repo.IncidentRepo;
 import com.astarbia.securityapi.service.NvdHttpService;
-import com.astarbia.securityapi.service.NvdService;
+import com.astarbia.securityapi.service.NvdPopulatorService;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NvdServiceTest {
+public class NvdPopulatorServiceTest {
 
     private NvdSampleService nvdSampleService = new NvdSampleService();
 
@@ -27,8 +27,8 @@ public class NvdServiceTest {
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
 
         IncidentRepo incidentRepo = new IncidentRepo();
-        NvdService nvdService = new NvdService(incidentRepo, nvdHttpService);
-        nvdService.refreshNvds();
+        NvdPopulatorService nvdPopulatorService = new NvdPopulatorService(incidentRepo, nvdHttpService);
+        nvdPopulatorService.refreshNvds();
 
         JSONObject rootObject = nvdSampleService.getTestCVEData();
         int totalObjects = rootObject.getInt("CVE_data_numberOfCVEs");
@@ -49,8 +49,8 @@ public class NvdServiceTest {
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
 
         IncidentRepo incidentRepo = new IncidentRepo();
-        NvdService nvdService = new NvdService(incidentRepo, nvdHttpService);
-        nvdService.refreshNvds();
+        NvdPopulatorService nvdPopulatorService = new NvdPopulatorService(incidentRepo, nvdHttpService);
+        nvdPopulatorService.refreshNvds();
 
         JSONObject rootObject = nvdSampleService.getTestCVEData();
         JSONObject firstCveObject = rootObject.getJSONArray("CVE_Items").getJSONObject(0);
@@ -79,9 +79,9 @@ public class NvdServiceTest {
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
 
         IncidentRepo incidentRepo = new IncidentRepo();
-        NvdService nvdService = new NvdService(incidentRepo, nvdHttpService);
-        nvdService.refreshNvds();
-        nvdService.refreshNvds();
+        NvdPopulatorService nvdPopulatorService = new NvdPopulatorService(incidentRepo, nvdHttpService);
+        nvdPopulatorService.refreshNvds();
+        nvdPopulatorService.refreshNvds();
 
         Mockito.verify(nvdHttpService, Mockito.times(1)).getRecentCveDataString();
     }
@@ -92,9 +92,9 @@ public class NvdServiceTest {
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn("broken json");
 
         IncidentRepo incidentRepo = new IncidentRepo();
-        NvdService nvdService = new NvdService(incidentRepo, nvdHttpService);
-        nvdService.refreshNvds();
-        nvdService.refreshNvds();
+        NvdPopulatorService nvdPopulatorService = new NvdPopulatorService(incidentRepo, nvdHttpService);
+        nvdPopulatorService.refreshNvds();
+        nvdPopulatorService.refreshNvds();
 
         Mockito.verify(nvdHttpService, Mockito.times(2)).getRecentCveDataString();
     }
@@ -108,9 +108,9 @@ public class NvdServiceTest {
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
 
         IncidentRepo incidentRepo = new IncidentRepo();
-        NvdService nvdService = new NvdService(incidentRepo, nvdHttpService);
-        nvdService.refreshNvds(TWO_HOURS_MS_MINUS_1);
-        nvdService.refreshNvds(TWO_HOURS_MS);
+        NvdPopulatorService nvdPopulatorService = new NvdPopulatorService(incidentRepo, nvdHttpService);
+        nvdPopulatorService.refreshNvds(TWO_HOURS_MS_MINUS_1);
+        nvdPopulatorService.refreshNvds(TWO_HOURS_MS);
 
         Mockito.verify(nvdHttpService, Mockito.times(1)).getRecentCveDataString();
     }

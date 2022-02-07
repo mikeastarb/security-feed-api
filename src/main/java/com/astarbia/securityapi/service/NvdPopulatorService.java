@@ -3,7 +3,6 @@ package com.astarbia.securityapi.service;
 import com.astarbia.securityapi.exception.DuplicateValueException;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.repo.IncidentRepo;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -13,8 +12,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class NvdService {
-    private static final Logger logger = LoggerFactory.getLogger(NvdService.class);
+public class NvdPopulatorService {
+    private static final Logger logger = LoggerFactory.getLogger(NvdPopulatorService.class);
     private final IncidentRepo incidentRepo;
     private final NvdHttpService nvdHttpService;
     private long lastRefreshedTime = 0;
@@ -22,7 +21,7 @@ public class NvdService {
 
     private static final long TWO_HOUR_MS = 1000 * 60 * 2;
 
-    public NvdService(IncidentRepo incidentRepo, NvdHttpService nvdHttpService) {
+    public NvdPopulatorService(IncidentRepo incidentRepo, NvdHttpService nvdHttpService) {
         this.incidentRepo = incidentRepo;
         this.nvdHttpService = nvdHttpService;
     }
@@ -31,7 +30,6 @@ public class NvdService {
         if (refreshNvds(System.currentTimeMillis() - lastRefreshedTime)) {
             lastRefreshedTime = System.currentTimeMillis();
         }
-        ;
     }
 
     public boolean refreshNvds(long timeDelta) {
