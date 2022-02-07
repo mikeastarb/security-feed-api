@@ -1,6 +1,6 @@
 package com.astarbia.securityapi.unit.service;
 
-import com.astarbia.securityapi.NvdSampleService;
+import com.astarbia.securityapi.unit.NvdSampleService;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.repo.IncidentRepo;
 import com.astarbia.securityapi.service.NvdHttpService;
