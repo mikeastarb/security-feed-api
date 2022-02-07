@@ -17,14 +17,11 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IncidentsIT {
-
-    @LocalServerPort
-    private int port;
+public class IncidentsIT extends IntTestBase {
 
     @Test
     public void incidentReadEndpointIsResponsive() {
-        assertThat(Unirest.get("http://localhost:" + port + "/incidents").asJson().getStatus()).isEqualTo(200);
+        assertThat(Unirest.get(buildUrl("/incidents")).asJson().getStatus()).isEqualTo(200);
     }
 
     @ParameterizedTest(name = "{index} => entries={0}")
@@ -32,13 +29,13 @@ public class IncidentsIT {
     public void incidentReadEndpointReturnsCountOfIncidentsInResponse(int entriesToAdd) {
         for (int i = 0; i < entriesToAdd; i++) {
             Incident incidentToAdd = new Incident(UUID.randomUUID().toString(), "CUSTOM", "Test", "Test", "Test");
-            Unirest.post("http://localhost:" + port + "/incidents")
+            Unirest.post(buildUrl("/incidents"))
                     .body(incidentToAdd)
                     .contentType("application/json")
                     .asJson();
         }
 
-        IncidentListResponse response = Unirest.get("http://localhost:" + port + "/incidents").asObject(IncidentListResponse.class).getBody();
+        IncidentListResponse response = Unirest.get(buildUrl("/incidents")).asObject(IncidentListResponse.class).getBody();
         assertThat(response.getTotalIncidents()).isEqualTo(response.getIncidents().size());
     }
 
@@ -46,7 +43,7 @@ public class IncidentsIT {
     public void postEndpointForIncidentsIsResponsive() {
         Incident incident = new Incident(UUID.randomUUID().toString(),
                 "CUSTOM", "This is a Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z");
-        int responseCode = Unirest.post("http://localhost:" + port + "/incidents")
+        int responseCode = Unirest.post(buildUrl("/incidents"))
                 .body(incident)
                 .contentType("application/json")
                 .asJson()
@@ -57,7 +54,7 @@ public class IncidentsIT {
     @Test
     public void postIncidentReturnsIncidentCreated() {
         Incident incident = new Incident(UUID.randomUUID().toString(), "CUSTOM", "This is a Description", "Test", "Test");
-        HttpResponse<Incident> incidentHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
+        HttpResponse<Incident> incidentHttpResponse = Unirest.post(buildUrl("/incidents"))
                 .body(incident)
                 .contentType("application/json")
                 .asObject(Incident.class);
@@ -70,7 +67,7 @@ public class IncidentsIT {
         String randomIDString = UUID.randomUUID().toString();
         String incidentWithMinimalDetailJson = "{\"sourceID\":\"" + randomIDString + "\",\"sourceCode\":\"CUSTOM\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
         Incident incident = new Incident(randomIDString, "CUSTOM", "This is a Description", "Test", "Test");
-        HttpResponse<Incident> incidentHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
+        HttpResponse<Incident> incidentHttpResponse = Unirest.post(buildUrl("/incidents"))
                 .body(incidentWithMinimalDetailJson)
                 .contentType("application/json")
                 .asObject(Incident.class);
@@ -81,12 +78,12 @@ public class IncidentsIT {
     @Test
     public void postedIncidentIsAvailableViaRead() {
         Incident incident = new Incident(UUID.randomUUID().toString(), "CUSTOM", "This is a Description", "Test", "Test");
-        Unirest.post("http://localhost:" + port + "/incidents")
+        Unirest.post(buildUrl("/incidents"))
                 .body(incident)
                 .contentType("application/json")
                 .asJson();
 
-        IncidentListResponse incidentList = Unirest.get("http://localhost:" + port + "/incidents")
+        IncidentListResponse incidentList = Unirest.get(buildUrl("/incidents"))
                 .asObject(IncidentListResponse.class)
                 .getBody();
 
@@ -97,7 +94,7 @@ public class IncidentsIT {
     public void postIncidentWithTooFewDetailsFails() {
         String randomIDString = UUID.randomUUID().toString();
         String incidentWithTooFewDetails = "{\"sourceID\":\"" + randomIDString + "\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
-        HttpResponse<String> stringHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
+        HttpResponse<String> stringHttpResponse = Unirest.post(buildUrl("/incidents"))
                 .body(incidentWithTooFewDetails)
                 .contentType("application/json")
                 .asString();
@@ -106,7 +103,7 @@ public class IncidentsIT {
                 .getStatus()).isEqualTo(400);
         assertThat(stringHttpResponse.getBody()).isEqualTo("A required field was missing from the request body for a new incident");
 
-        IncidentListResponse incidentListResponse = Unirest.get("http://localhost:" + port + "/incidents")
+        IncidentListResponse incidentListResponse = Unirest.get(buildUrl("/incidents"))
                 .asObject(IncidentListResponse.class)
                 .getBody();
         assertThat(randomIDString).isNotIn(incidentListResponse.getIncidents().stream().map(Incident::getSourceID));
@@ -118,12 +115,12 @@ public class IncidentsIT {
         Incident first = new Incident(randomIDString, "CUSTOM", "Something", "Different", "Here");
         Incident second = new Incident(randomIDString, "CUSTOM", "Testing", "Other", "Things");
 
-        Unirest.post("http://localhost:" + port + "/incidents")
+        Unirest.post(buildUrl("/incidents"))
                 .body(first)
                 .contentType("application/json")
                 .asJson();
 
-        HttpResponse<String> stringHttpResponse = Unirest.post("http://localhost:" + port + "/incidents")
+        HttpResponse<String> stringHttpResponse = Unirest.post(buildUrl("/incidents"))
                 .body(second)
                 .contentType("application/json")
                 .asString();
@@ -134,7 +131,7 @@ public class IncidentsIT {
         assertThat(stringHttpResponse.getBody()).contains(randomIDString);
         assertThat(stringHttpResponse.getBody()).contains("CUSTOM");
 
-        IncidentListResponse getBody = Unirest.get("http://localhost:" + port + "/incidents")
+        IncidentListResponse getBody = Unirest.get(buildUrl("/incidents"))
                 .asObject(IncidentListResponse.class)
                 .getBody();
 
@@ -147,7 +144,7 @@ public class IncidentsIT {
         incident.setLongitude(15);
         incident.setLatitude(-23.4);
 
-        Incident response = Unirest.post("http://localhost:" + port + "/incidents")
+        Incident response = Unirest.post(buildUrl("/incidents"))
                 .body(incident)
                 .contentType("application/json")
                 .asObject(Incident.class)
