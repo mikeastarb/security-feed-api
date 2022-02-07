@@ -94,3 +94,4 @@ Next, I'll take a TDD/ATDD approach to building out what would be needed for my 
 * Refactored/used IDE to reorganize and clean up code. Staring on developing the actual integration with NVD now that we have a solid foundation for reading our own data model of incidents
 * Going to refactor the integration tests to use inheritance in order to share common setup
 * Tests being added for parsing and processing NVDCVE results with basic implementation and coverage at the unit and E2E layers
+* Final integration and testing complete with NVD's recent data feed

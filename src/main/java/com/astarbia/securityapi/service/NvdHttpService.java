@@ -20,13 +20,13 @@ public class NvdHttpService {
         restTemplate = restTemplateBuilder.build();
     }
 
-    public String getRecentCveDataString() {
+    public String getRecentCveDataString() throws IOException {
         byte[] response = restTemplate.getForObject("https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-recent.json.gz", byte[].class);
         try {
             return new String(new GZIPInputStream(new ByteArrayInputStream(response)).readAllBytes());
         } catch (IOException e) {
-            logger.error("Could not read gzip file from NVD. Returning empty data set", e);
-            return "{\"CVE_data_numberOfCVEs\":\"0\"}";
+            logger.error("Could not read gzip file from NVD. Returning empty data set");
+            throw e;
         }
     }
 }

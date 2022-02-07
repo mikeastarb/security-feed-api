@@ -10,6 +10,7 @@ import kong.unirest.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class NvdServiceTest {
     private NvdSampleService nvdSampleService = new NvdSampleService();
 
     @Test
-    public void serviceAddsMissingIncidentsToRepo() {
+    public void serviceAddsMissingIncidentsToRepo() throws IOException {
         NvdHttpService nvdHttpService = Mockito.mock(NvdHttpService.class);
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
 
@@ -43,7 +44,7 @@ public class NvdServiceTest {
     }
 
     @Test
-    public void serviceAddsAllNVDInformationForIncident() {
+    public void serviceAddsAllNVDInformationForIncident() throws IOException {
         NvdHttpService nvdHttpService = Mockito.mock(NvdHttpService.class);
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
 
@@ -73,7 +74,7 @@ public class NvdServiceTest {
     }
 
     @Test
-    public void nvdServiceDoesNotTryToReadDataTwiceBackToBack() {
+    public void nvdServiceDoesNotTryToReadDataTwiceBackToBack() throws IOException {
         NvdHttpService nvdHttpService = Mockito.mock(NvdHttpService.class);
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
 
@@ -86,7 +87,7 @@ public class NvdServiceTest {
     }
 
     @Test
-    public void nvdServiceDoesntConsiderFailuresForTimestampUpdates() {
+    public void nvdServiceDoesntConsiderFailuresForTimestampUpdates() throws IOException {
         NvdHttpService nvdHttpService = Mockito.mock(NvdHttpService.class);
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn("broken json");
 
@@ -102,7 +103,7 @@ public class NvdServiceTest {
     private static long TWO_HOURS_MS_MINUS_1 = TWO_HOURS_MS - 1;
 
     @Test
-    public void nvdServiceRetriesDataLoadingAfterTwoHours() {
+    public void nvdServiceRetriesDataLoadingAfterTwoHours() throws IOException {
         NvdHttpService nvdHttpService = Mockito.mock(NvdHttpService.class);
         Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
 

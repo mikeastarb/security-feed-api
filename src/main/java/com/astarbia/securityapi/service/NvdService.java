@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 public class NvdService {
     private static final Logger logger = LoggerFactory.getLogger(NvdService.class);
@@ -41,7 +43,7 @@ public class NvdService {
         JsonNode jsonNode;
         try {
             jsonNode = objectMapper.readTree(nvdHttpService.getRecentCveDataString());
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             logger.error("Unable to parse the JSON String returned by the service. No processing will be done", e);
             return false;
         }
