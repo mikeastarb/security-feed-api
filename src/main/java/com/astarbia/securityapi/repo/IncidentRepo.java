@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public class IncidentRepo {
-    private List<Incident> incidents = new ArrayList<>();
+    private final List<Incident> incidents = new ArrayList<>();
 
     public Incident addIncident(Incident incident) throws DuplicateValueException {
         if (incidents.stream().anyMatch(existing -> existing.getSourceID().equals(incident.getSourceID()) && existing.getSourceCode().equals(incident.getSourceCode()))) {

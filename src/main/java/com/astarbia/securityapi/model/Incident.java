@@ -10,10 +10,10 @@ public class Incident {
 
     private final String sourceID;
     private final String sourceCode;
-    private String description;
-    private String publishedDate;
-    private String lastModifiedDate;
-    private List<String> references;
+    private final String description;
+    private final String publishedDate;
+    private final String lastModifiedDate;
+    private final List<String> references;
     private Double latitude;
     private Double longitude;
 
@@ -26,20 +26,6 @@ public class Incident {
         this.references = new ArrayList<>();
         this.latitude = null;
         this.longitude = null;
-    }
-
-    public void setLatitude(double latitude) throws RangeOutOfBoundsException {
-        if(latitude < -90.0 || 90.0 < latitude) {
-            throw new RangeOutOfBoundsException();
-        }
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(double longitude) throws RangeOutOfBoundsException {
-        if(longitude < -180.0 || 180.0 < longitude) {
-            throw new RangeOutOfBoundsException();
-        }
-        this.longitude = longitude;
     }
 
     public String getSourceID() {
@@ -70,8 +56,22 @@ public class Incident {
         return latitude;
     }
 
+    public void setLatitude(double latitude) throws RangeOutOfBoundsException {
+        if (latitude < -90.0 || 90.0 < latitude) {
+            throw new RangeOutOfBoundsException();
+        }
+        this.latitude = latitude;
+    }
+
     public Double getLongitude() {
         return longitude;
+    }
+
+    public void setLongitude(double longitude) throws RangeOutOfBoundsException {
+        if (longitude < -180.0 || 180.0 < longitude) {
+            throw new RangeOutOfBoundsException();
+        }
+        this.longitude = longitude;
     }
 
     public boolean isValid() {

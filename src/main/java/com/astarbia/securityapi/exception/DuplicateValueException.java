@@ -1,4 +1,4 @@
 package com.astarbia.securityapi.exception;
 
-public class DuplicateValueException extends Exception{
+public class DuplicateValueException extends Exception {
 }

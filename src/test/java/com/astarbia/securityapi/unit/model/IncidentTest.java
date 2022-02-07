@@ -4,10 +4,8 @@ import com.astarbia.securityapi.exception.RangeOutOfBoundsException;
 import com.astarbia.securityapi.model.Incident;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.stream.Stream;
 
@@ -15,6 +13,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IncidentTest {
+
+    private static Stream<Incident> invalidIncidentProvider() {
+        return Stream.of(
+                new Incident(null, "test", "test", "test", "test"),
+                new Incident("test", null, "test", "test", "test"),
+                new Incident("test", "test", null, "test", "test"),
+                new Incident("test", "test", "test", null, "test"),
+                new Incident("test", "test", "test", "test", null)
+        );
+    }
 
     @ParameterizedTest(name = "{index} => latitude={0}")
     @ValueSource(doubles = {-90.1, 90.1})
@@ -82,16 +90,6 @@ public class IncidentTest {
     @MethodSource("invalidIncidentProvider")
     public void incidentInvalidWhenFieldMissing(Incident incident) {
         assertThat(incident.isValid()).isFalse();
-    }
-
-    private static Stream<Incident> invalidIncidentProvider() {
-        return Stream.of(
-                new Incident(null, "test", "test", "test", "test"),
-                new Incident("test", null, "test", "test", "test"),
-                new Incident("test", "test", null, "test", "test"),
-                new Incident("test", "test", "test", null, "test"),
-                new Incident("test", "test", "test", "test", null)
-        );
     }
 
     private Incident getTestIncident() {

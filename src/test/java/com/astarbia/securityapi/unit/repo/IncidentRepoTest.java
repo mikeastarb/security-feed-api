@@ -16,7 +16,7 @@ public class IncidentRepoTest {
     }
 
     @Test
-    public void addIncidentToRepoPersists() throws DuplicateValueException{
+    public void addIncidentToRepoPersists() throws DuplicateValueException {
         IncidentRepo repo = new IncidentRepo();
         Incident incident = new Incident("test", "test", "test", "test", "test");
         repo.addIncident(incident);
@@ -34,7 +34,7 @@ public class IncidentRepoTest {
     @Test
     public void cannotAddSameSourceIDCodePairTwice() throws DuplicateValueException {
         IncidentRepo repo = new IncidentRepo();
-        Incident incident = new Incident("test", "test", "something" ,"different", "here");
+        Incident incident = new Incident("test", "test", "something", "different", "here");
         Incident secondIncident = new Incident("test", "test", "other", "data", "here");
         repo.addIncident(incident);
         assertThrows(DuplicateValueException.class, () -> {

@@ -115,7 +115,7 @@ public class IncidentsIT {
     @Test
     public void cannotPostTheSameIncidentTwice() {
         String randomIDString = UUID.randomUUID().toString();
-        Incident first = new Incident(randomIDString, "CUSTOM", "Something","Different", "Here");
+        Incident first = new Incident(randomIDString, "CUSTOM", "Something", "Different", "Here");
         Incident second = new Incident(randomIDString, "CUSTOM", "Testing", "Other", "Things");
 
         Unirest.post("http://localhost:" + port + "/incidents")
