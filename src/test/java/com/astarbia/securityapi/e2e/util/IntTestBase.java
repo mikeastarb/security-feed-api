@@ -1,4 +1,4 @@
-package com.astarbia.securityapi.e2e;
+package com.astarbia.securityapi.e2e.util;
 
 import org.springframework.boot.web.server.LocalServerPort;
 

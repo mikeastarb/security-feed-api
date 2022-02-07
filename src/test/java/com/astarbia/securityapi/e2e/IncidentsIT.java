@@ -1,6 +1,7 @@
 package com.astarbia.securityapi.e2e;
 
 import com.astarbia.securityapi.Application;
+import com.astarbia.securityapi.e2e.util.IntTestBase;
 import com.astarbia.securityapi.exception.RangeOutOfBoundsException;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.model.response.IncidentListResponse;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 
 import java.util.UUID;
 

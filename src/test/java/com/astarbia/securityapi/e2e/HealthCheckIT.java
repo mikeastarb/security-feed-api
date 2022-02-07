@@ -1,6 +1,7 @@
 package com.astarbia.securityapi.e2e;
 
 import com.astarbia.securityapi.Application;
+import com.astarbia.securityapi.e2e.util.IntTestBase;
 import kong.unirest.Unirest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
