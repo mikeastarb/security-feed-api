@@ -93,3 +93,4 @@ Next, I'll take a TDD/ATDD approach to building out what would be needed for my 
   * Coverage of the unit tests is aimed towards finding bugs, which means they're looking at where logical things are taking place. Between E2E and Unit tests we do have full coverage
 * Refactored/used IDE to reorganize and clean up code. Staring on developing the actual integration with NVD now that we have a solid foundation for reading our own data model of incidents
 * Going to refactor the integration tests to use inheritance in order to share common setup
+* Tests being added for parsing and processing NVDCVE results with basic implementation and coverage at the unit and E2E layers

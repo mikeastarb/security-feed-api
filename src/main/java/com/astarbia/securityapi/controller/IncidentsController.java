@@ -4,6 +4,7 @@ import com.astarbia.securityapi.exception.DuplicateValueException;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.model.response.IncidentListResponse;
 import com.astarbia.securityapi.repo.IncidentRepo;
+import com.astarbia.securityapi.service.NvdService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class IncidentsController {
 
     private final IncidentRepo incidentRepo;
+    private final NvdService nvdService;
 
-    public IncidentsController(IncidentRepo incidentRepo) {
+    public IncidentsController(IncidentRepo incidentRepo, NvdService nvdService) {
         this.incidentRepo = incidentRepo;
+        this.nvdService = nvdService;
     }
 
     @GetMapping(value = "/incidents", produces = {"application/json"})
     public ResponseEntity getAllIncidents() {
+        nvdService.refreshNvds();
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         incidentListResponse.setIncidents(incidentRepo.getIncidents());
         return new ResponseEntity<>(incidentListResponse, HttpStatus.OK);
