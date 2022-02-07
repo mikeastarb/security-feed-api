@@ -4,7 +4,7 @@ import com.astarbia.securityapi.exception.DuplicateValueException;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.model.response.IncidentListResponse;
 import com.astarbia.securityapi.repo.IncidentRepo;
-import com.astarbia.securityapi.service.NvdService;
+import com.astarbia.securityapi.service.SourceDataServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class IncidentsController {
 
     private final IncidentRepo incidentRepo;
-    private final NvdService nvdService;
+    private final SourceDataServices sourceDataServices;
 
-    public IncidentsController(IncidentRepo incidentRepo, NvdService nvdService) {
+    public IncidentsController(IncidentRepo incidentRepo, SourceDataServices sourceDataServices) {
         this.incidentRepo = incidentRepo;
-        this.nvdService = nvdService;
+        this.sourceDataServices = sourceDataServices;
     }
 
     @GetMapping(value = "/incidents", produces = {"application/json"})
     public ResponseEntity getAllIncidents() {
-        nvdService.refreshNvds();
+        sourceDataServices.refreshAllDataSources(); // TODO: Move this processing to a separate thread to keep API responsive
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         incidentListResponse.setIncidents(incidentRepo.getIncidents());
         return new ResponseEntity<>(incidentListResponse, HttpStatus.OK);
