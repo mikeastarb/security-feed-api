@@ -29,4 +29,11 @@ public class IncidentListResponseTest {
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         assertThat(incidentListResponse.getTotalIncidents()).isEqualTo(0);
     }
+
+    @Test
+    public void settingListToNullResetsToEmpty() {
+        IncidentListResponse incidentListResponse = new IncidentListResponse();
+        incidentListResponse.setIncidents(null);
+        assertThat(incidentListResponse.getResponseCount()).isEqualTo(0);
+    }
 }
