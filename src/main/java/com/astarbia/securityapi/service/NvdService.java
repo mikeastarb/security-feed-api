@@ -26,13 +26,14 @@ public class NvdService {
     }
 
     public void refreshNvds() {
-        if(refreshNvds(System.currentTimeMillis() - lastRefreshedTime)) {
+        if (refreshNvds(System.currentTimeMillis() - lastRefreshedTime)) {
             lastRefreshedTime = System.currentTimeMillis();
-        };
+        }
+        ;
     }
 
     public boolean refreshNvds(long timeDelta) {
-        if(timeDelta < TWO_HOUR_MS) {
+        if (timeDelta < TWO_HOUR_MS) {
             logger.info("Not refreshing NVDs yet, hasn't been two hours");
             return false;
         }
@@ -47,22 +48,7 @@ public class NvdService {
 
         int totalEntries = jsonNode.get("CVE_data_numberOfCVEs").asInt();
         for (int i = 0; i < totalEntries; i++) {
-            JsonNode cveItem = jsonNode.get("CVE_Items").get(i);
-            String cveID = cveItem.get("cve").get("CVE_data_meta").get("ID").asText();
-            String description = "No English Description Found";
-
-            int descriptionCount = cveItem.get("cve").get("description").get("description_data").size();
-            for (int j = 0; j < descriptionCount; j++) {
-                String lang = cveItem.get("cve").get("description").get("description_data").get(j).get("lang").asText();
-                if (lang.equals("en")) {
-                    description = cveItem.get("cve").get("description").get("description_data").get(j).get("value").asText();
-                }
-            }
-
-            String publishedDate = cveItem.get("publishedDate").asText();
-            String lastModifiedDate = cveItem.get("lastModifiedDate").asText();
-
-            Incident newIncident = new Incident(cveID, "NVD", description, publishedDate, lastModifiedDate);
+            Incident newIncident = parseIncidentInformation(jsonNode.get("CVE_Items").get(i));
             try {
                 incidentRepo.addIncident(newIncident);
             } catch (DuplicateValueException e) {
@@ -71,5 +57,25 @@ public class NvdService {
         }
 
         return true;
+    }
+
+    private Incident parseIncidentInformation(JsonNode cveItem) {
+        String cveID = cveItem.get("cve").get("CVE_data_meta").get("ID").asText();
+
+        // TODO: Add test around this text being here
+        String description = "No English Description Found";
+
+        int descriptionCount = cveItem.get("cve").get("description").get("description_data").size();
+        for (int i = 0; i < descriptionCount; i++) {
+            String lang = cveItem.get("cve").get("description").get("description_data").get(i).get("lang").asText();
+            if (lang.equals("en")) {
+                description = cveItem.get("cve").get("description").get("description_data").get(i).get("value").asText();
+            }
+        }
+
+        String publishedDate = cveItem.get("publishedDate").asText();
+        String lastModifiedDate = cveItem.get("lastModifiedDate").asText();
+
+        return new Incident(cveID, "NVD", description, publishedDate, lastModifiedDate);
     }
 }
