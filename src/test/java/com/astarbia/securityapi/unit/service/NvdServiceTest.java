@@ -71,4 +71,46 @@ public class NvdServiceTest {
         Incident expected = incidentRepo.getIncidents().stream().filter(incident -> incident.getSourceID().equals(firstIncident.getSourceID())).findAny().get();
         assertThat(firstIncident).isEqualTo(expected);
     }
+
+    @Test
+    public void nvdServiceDoesNotTryToReadDataTwiceBackToBack() {
+        NvdHttpService nvdHttpService = Mockito.mock(NvdHttpService.class);
+        Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
+
+        IncidentRepo incidentRepo = new IncidentRepo();
+        NvdService nvdService = new NvdService(incidentRepo, nvdHttpService);
+        nvdService.refreshNvds();
+        nvdService.refreshNvds();
+
+        Mockito.verify(nvdHttpService, Mockito.times(1)).getRecentCveDataString();
+    }
+
+    @Test
+    public void nvdServiceDoesntConsiderFailuresForTimestampUpdates() {
+        NvdHttpService nvdHttpService = Mockito.mock(NvdHttpService.class);
+        Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn("broken json");
+
+        IncidentRepo incidentRepo = new IncidentRepo();
+        NvdService nvdService = new NvdService(incidentRepo, nvdHttpService);
+        nvdService.refreshNvds();
+        nvdService.refreshNvds();
+
+        Mockito.verify(nvdHttpService, Mockito.times(2)).getRecentCveDataString();
+    }
+
+    private static long TWO_HOURS_MS = 1000 * 60 * 2;
+    private static long TWO_HOURS_MS_MINUS_1 = TWO_HOURS_MS - 1;
+
+    @Test
+    public void nvdServiceRetriesDataLoadingAfterTwoHours() {
+        NvdHttpService nvdHttpService = Mockito.mock(NvdHttpService.class);
+        Mockito.when(nvdHttpService.getRecentCveDataString()).thenReturn(nvdSampleService.getTestCVEJSONString());
+
+        IncidentRepo incidentRepo = new IncidentRepo();
+        NvdService nvdService = new NvdService(incidentRepo, nvdHttpService);
+        nvdService.refreshNvds(TWO_HOURS_MS_MINUS_1);
+        nvdService.refreshNvds(TWO_HOURS_MS);
+
+        Mockito.verify(nvdHttpService, Mockito.times(1)).getRecentCveDataString();
+    }
 }
