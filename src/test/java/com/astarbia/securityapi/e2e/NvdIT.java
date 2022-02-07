@@ -41,8 +41,9 @@ public class NvdIT extends IntTestBase {
                 .asObject(IncidentListResponse.class)
                 .getBody();
 
-        List<String> actualIDs = actualIncidents.getIncidents().stream().map(Incident::getSourceID).collect(Collectors.toList());
+        List<String> actualIDs = actualIncidents.getIncidents().stream().filter(incident -> incident.getSourceCode().equals("NVD"))
+                .map(Incident::getSourceID).collect(Collectors.toList());
 
-        assertThat(actualIDs).containsAll(expectedIDs);
+        assertThat(expectedIDs).containsAll(actualIDs);
     }
 }

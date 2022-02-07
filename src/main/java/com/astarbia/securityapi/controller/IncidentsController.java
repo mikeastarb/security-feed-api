@@ -1,15 +1,21 @@
 package com.astarbia.securityapi.controller;
 
+import com.astarbia.securityapi.exception.AlreadyReportedException;
+import com.astarbia.securityapi.exception.BadRequestException;
 import com.astarbia.securityapi.exception.DuplicateValueException;
 import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.model.response.IncidentListResponse;
 import com.astarbia.securityapi.repo.IncidentRepo;
 import com.astarbia.securityapi.service.SourceDataServices;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
 
@@ -26,7 +32,7 @@ public class IncidentsController {
     }
 
     @GetMapping(value = "/incidents", produces = {"application/json"})
-    public ResponseEntity getAllIncidents(@RequestParam(name="size", required=false, defaultValue="200") String sizeParam,
+    public IncidentListResponse getAllIncidents(@RequestParam(name="size", required=false, defaultValue="200") String sizeParam,
                                           @RequestParam(name="page", required=false, defaultValue="0") String pageParam) {
         int size;
         int page;
@@ -35,45 +41,48 @@ public class IncidentsController {
             page = Integer.parseInt(pageParam);
         } catch (NumberFormatException e) {
             logger.warn("User tried to pass a bad integer", e);
-            return new ResponseEntity<>("Size and Page must be integers", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Size and Page must be integers");
         }
 
         if(size < 1) {
-            return new ResponseEntity<>("Size of page must be a positive number", HttpStatus.BAD_REQUEST);
+            logger.warn("User tried to get a count less than 1");
+            throw new BadRequestException("Size of page must be a positive number");
         }
 
         if(page < 0) {
-            return new ResponseEntity<>("Page number must be zero or greater", HttpStatus.BAD_REQUEST);
+            logger.warn("User tried to get a page count less than 0");
+            throw new BadRequestException("Page number must be zero or greater");
         }
 
         sourceDataServices.refreshAllDataSources(); // TODO: Move this processing to a separate thread to keep API responsive
 
         if(page * size > incidentRepo.getIncidents().size()) {
-            return new ResponseEntity<>("Page requested is out of range for maximum pages for that size", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Page requested is out of range for maximum pages for that size");
         }
 
         return getAllIncidents(Math.min(size, 200), page);
     }
 
-    private ResponseEntity<IncidentListResponse> getAllIncidents(int size, int page) {
+    private IncidentListResponse getAllIncidents(int size, int page) {
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         List<Incident> pagedIncidents = incidentRepo.getIncidents().subList(page * size, Math.min((page * size) + size, incidentRepo.getIncidents().size()));
         incidentListResponse.setIncidents(pagedIncidents);
         incidentListResponse.setPage(page);
         incidentListResponse.setSize(size);
         incidentListResponse.setTotalIncidents(incidentRepo.getIncidents().size());
-        return new ResponseEntity<>(incidentListResponse, HttpStatus.OK);
+        return incidentListResponse;
     }
 
     @PostMapping(value = "/incidents", produces = {"application/json"})
-    public ResponseEntity addNewIncident(@RequestBody Incident incident) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Incident addNewIncident(@RequestBody Incident incident) {
         if (!incident.isValid()) {
-            return new ResponseEntity<>("A required field was missing from the request body for a new incident", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("A required field was missing from the request body for a new incident");
         }
         try {
-            return new ResponseEntity<>(incidentRepo.addIncident(incident), HttpStatus.CREATED);
+            return incidentRepo.addIncident(incident);
         } catch (DuplicateValueException e) {
-            return new ResponseEntity<>("An incident with the ID " + incident.getSourceID() + " already exists for " + incident.getSourceCode(), HttpStatus.ALREADY_REPORTED);
+            throw new AlreadyReportedException("An incident with the ID " + incident.getSourceID() + " already exists for " + incident.getSourceCode());
         }
     }
 }

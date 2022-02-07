@@ -27,21 +27,6 @@ public class IncidentsIT extends IntTestBase {
         assertThat(Unirest.get(buildUrl("/incidents")).asJson().getStatus()).isEqualTo(200);
     }
 
-    @ParameterizedTest(name = "{index} => entries={0}")
-    @ValueSource(ints = {0, 1, 2, 4})
-    public void incidentReadEndpointReturnsCountOfIncidentsInResponse(int entriesToAdd) {
-        for (int i = 0; i < entriesToAdd; i++) {
-            Incident incidentToAdd = new Incident(UUID.randomUUID().toString(), "CUSTOM", "Test", "Test", "Test");
-            Unirest.post(buildUrl("/incidents"))
-                    .body(incidentToAdd)
-                    .contentType("application/json")
-                    .asJson();
-        }
-
-        IncidentListResponse response = Unirest.get(buildUrl("/incidents")).asObject(IncidentListResponse.class).getBody();
-        assertThat(response.getTotalIncidents()).isEqualTo(response.getIncidents().size());
-    }
-
     @Test
     public void postEndpointForIncidentsIsResponsive() {
         Incident incident = new Incident(UUID.randomUUID().toString(),
@@ -104,7 +89,6 @@ public class IncidentsIT extends IntTestBase {
 
         assertThat(stringHttpResponse
                 .getStatus()).isEqualTo(400);
-        assertThat(stringHttpResponse.getBody()).isEqualTo("A required field was missing from the request body for a new incident");
 
         IncidentListResponse incidentListResponse = Unirest.get(buildUrl("/incidents"))
                 .asObject(IncidentListResponse.class)
@@ -130,9 +114,6 @@ public class IncidentsIT extends IntTestBase {
 
         assertThat(stringHttpResponse
                 .getStatus()).isEqualTo(208);
-        assertThat(stringHttpResponse.getBody()).contains("already exists");
-        assertThat(stringHttpResponse.getBody()).contains(randomIDString);
-        assertThat(stringHttpResponse.getBody()).contains("CUSTOM");
 
         IncidentListResponse getBody = Unirest.get(buildUrl("/incidents"))
                 .asObject(IncidentListResponse.class)

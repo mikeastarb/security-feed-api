@@ -35,7 +35,6 @@ public class IncidentsPagingIT extends IntTestBase {
                 .asString();
 
         assertThat(responseObject.getStatus()).isEqualTo(400);
-        assertThat(responseObject.getBody()).contains("must be a positive number");
     }
 
     @Test
@@ -64,7 +63,6 @@ public class IncidentsPagingIT extends IntTestBase {
                 .asString();
 
         assertThat(responseObject.getStatus()).isEqualTo(400);
-        assertThat(responseObject.getBody()).contains("must be zero or greater");
     }
 
     @Test
@@ -73,7 +71,6 @@ public class IncidentsPagingIT extends IntTestBase {
                 .asString();
 
         assertThat(responseObject.getStatus()).isEqualTo(400);
-        assertThat(responseObject.getBody()).contains("is out of range for maximum pages for that size");
     }
 
     @ParameterizedTest
@@ -102,7 +99,6 @@ public class IncidentsPagingIT extends IntTestBase {
                 .asString();
 
         assertThat(responseObject.getStatus()).isEqualTo(400);
-        assertThat(responseObject.getBody()).contains("must be integers");
     }
 
     @Test

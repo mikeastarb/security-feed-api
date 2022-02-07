@@ -21,7 +21,7 @@ public class IncidentListResponseTest {
                 new Incident("test", "test", "test", "test", "test")
         );
         incidentListResponse.setIncidents(incidents);
-        assertThat(incidentListResponse.getTotalIncidents()).isEqualTo(incidents.size());
+        assertThat(incidentListResponse.getResponseCount()).isEqualTo(incidents.size());
     }
 
     @Test
