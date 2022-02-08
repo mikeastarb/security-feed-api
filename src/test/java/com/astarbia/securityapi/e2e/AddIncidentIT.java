@@ -18,7 +18,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class IncidentsIT extends IntTestBase {
+class AddIncidentIT extends IntTestBase {
 
     @Test
     void incidentReadEndpointIsResponsive() {
