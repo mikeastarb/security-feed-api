@@ -9,15 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class HealthCheckIT extends IntTestBase {
+class HealthCheckIT extends IntTestBase {
 
     @Test
-    public void healthCheckIsResponsive() {
+    void healthCheckIsResponsive() {
         assertThat(Unirest.get(buildUrl("/actuator/health")).asJson().getStatus()).isEqualTo(200);
     }
 
     @Test
-    public void swaggerDocsAreAvailable() {
+    void swaggerDocsAreAvailable() {
         assertThat(Unirest.get(buildUrl("/swagger-ui.html")).asString().getStatus()).isEqualTo(200);
     }
 }

@@ -9,10 +9,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IncidentListResponseTest {
+class IncidentListResponseTest {
 
     @Test
-    public void settingResponseListUpdatesMetaInformation() {
+    void settingResponseListUpdatesMetaInformation() {
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         List<Incident> incidents = Arrays.asList(
                 new Incident("test", "test", "test", "test", "test"),
@@ -25,13 +25,13 @@ public class IncidentListResponseTest {
     }
 
     @Test
-    public void listResponseStartsEmpty() {
+    void listResponseStartsEmpty() {
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         assertThat(incidentListResponse.getTotalIncidents()).isEqualTo(0);
     }
 
     @Test
-    public void settingListToNullResetsToEmpty() {
+    void settingListToNullResetsToEmpty() {
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         incidentListResponse.setIncidents(null);
         assertThat(incidentListResponse.getResponseCount()).isEqualTo(0);

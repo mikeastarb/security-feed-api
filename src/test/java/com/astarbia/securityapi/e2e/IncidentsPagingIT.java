@@ -17,10 +17,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IncidentsPagingIT extends IntTestBase {
+class IncidentsPagingIT extends IntTestBase {
 
     @Test
-    public void userCanSetSizeOfReturnedResults() {
+    void userCanSetSizeOfReturnedResults() {
         IncidentListResponse response = Unirest.get(buildUrl("/incidents?size=10"))
                 .asObject(IncidentListResponse.class)
                 .getBody();
@@ -30,7 +30,7 @@ public class IncidentsPagingIT extends IntTestBase {
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0})
-    public void returnCountMustBePositive(int size) {
+    void returnCountMustBePositive(int size) {
         HttpResponse<String> responseObject = Unirest.get(buildUrl("/incidents?size=" + size))
                 .asString();
 
@@ -38,17 +38,17 @@ public class IncidentsPagingIT extends IntTestBase {
     }
 
     @Test
-    public void pageNumberAndCountOfResultsInPageInResponse() {
+    void pageNumberAndCountOfResultsInPageInResponse() {
         IncidentListResponse response = Unirest.get(buildUrl("/incidents?size=10"))
                 .asObject(IncidentListResponse.class)
                 .getBody();
 
-        assertThat(response.getPage()).isEqualTo(0);
+        assertThat(response.getPage()).isZero();
         assertThat(response.getSize()).isEqualTo(10);
     }
 
     @Test
-    public void userCanGoToAnyValidPage() {
+    void userCanGoToAnyValidPage() {
         IncidentListResponse response = Unirest.get(buildUrl("/incidents?size=10&page=5"))
                 .asObject(IncidentListResponse.class)
                 .getBody();
@@ -58,7 +58,7 @@ public class IncidentsPagingIT extends IntTestBase {
     }
 
     @Test
-    public void goingToNonExistentPageReturnsError() {
+    void goingToNonExistentPageReturnsError() {
         HttpResponse<String> responseObject = Unirest.get(buildUrl("/incidents?size=10&page=-1"))
                 .asString();
 
@@ -66,7 +66,7 @@ public class IncidentsPagingIT extends IntTestBase {
     }
 
     @Test
-    public void goingToTooHighAPageReturnsError() {
+    void goingToTooHighAPageReturnsError() {
         HttpResponse<String> responseObject = Unirest.get(buildUrl("/incidents?size=10&page=5000"))
                 .asString();
 
@@ -75,7 +75,7 @@ public class IncidentsPagingIT extends IntTestBase {
 
     @ParameterizedTest
     @ValueSource(ints = {200, 201})
-    public void maximumOf200RecordsReturnedAtOnce(int size) {
+    void maximumOf200RecordsReturnedAtOnce(int size) {
         IncidentListResponse response = Unirest.get(buildUrl("/incidents?size=" + size))
                 .asObject(IncidentListResponse.class)
                 .getBody();
@@ -84,7 +84,7 @@ public class IncidentsPagingIT extends IntTestBase {
     }
 
     @Test
-    public void defaultSizeIs200() {
+    void defaultSizeIs200() {
         IncidentListResponse response = Unirest.get(buildUrl("/incidents"))
                 .asObject(IncidentListResponse.class)
                 .getBody();
@@ -94,7 +94,7 @@ public class IncidentsPagingIT extends IntTestBase {
 
     @ParameterizedTest
     @ValueSource(strings = {"10.3", "test", "0.13"})
-    public void badInputsReturnErrors(String sample) {
+    void badInputsReturnErrors(String sample) {
         HttpResponse<String> responseObject = Unirest.get(buildUrl("/incidents?size=" + sample + "10&page=" + sample))
                 .asString();
 
@@ -102,7 +102,7 @@ public class IncidentsPagingIT extends IntTestBase {
     }
 
     @Test
-    public void itemsNotLostOnPageBoundaries() {
+    void itemsNotLostOnPageBoundaries() {
         List<Incident> pagedIncidents = new ArrayList<>();
 
         pagedIncidents.addAll(Unirest.get(buildUrl("/incidents?size=10&page=0"))
@@ -121,7 +121,7 @@ public class IncidentsPagingIT extends IntTestBase {
     }
 
     @Test
-    public void totalCountAccountsForAllItems() {
+    void totalCountAccountsForAllItems() {
         List<Incident> pagedIncidents = new ArrayList<>();
         IncidentListResponse firstResponse = Unirest.get(buildUrl("/incidents?size=20&page=0"))
                 .asObject(IncidentListResponse.class)
@@ -129,13 +129,13 @@ public class IncidentsPagingIT extends IntTestBase {
 
         int responseCode = 200;
         int page = 0;
-        while(responseCode == 200) {
+        while (responseCode == 200) {
             HttpResponse<IncidentListResponse> incidentListResponseHttpResponse = Unirest.get(buildUrl("/incidents?page=" + page++))
                     .asObject(IncidentListResponse.class);
 
             responseCode = incidentListResponseHttpResponse.getStatus();
 
-            if(responseCode == 200) {
+            if (responseCode == 200) {
                 pagedIncidents.addAll(incidentListResponseHttpResponse
                         .getBody().getIncidents());
             }
@@ -145,7 +145,7 @@ public class IncidentsPagingIT extends IntTestBase {
     }
 
     @Test
-    public void responseHasActualCount() {
+    void responseHasActualCount() {
         IncidentListResponse response = Unirest.get(buildUrl("/incidents?page=1"))
                 .asObject(IncidentListResponse.class)
                 .getBody();

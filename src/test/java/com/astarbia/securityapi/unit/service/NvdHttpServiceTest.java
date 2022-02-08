@@ -8,10 +8,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
-public class NvdHttpServiceTest {
+class NvdHttpServiceTest {
 
     @Test
-    public void httpServiceCallsOutToNVD() throws IOException {
+    void httpServiceCallsOutToNVD() throws IOException {
         RestTemplate restTemplate = Mockito.mock(RestTemplate.class);
         RestTemplateBuilder restTemplateBuilder = Mockito.mock(RestTemplateBuilder.class);
         Mockito.when(restTemplate.getForObject("https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-recent.json.gz", byte[].class))

@@ -1,8 +1,6 @@
 package com.astarbia.securityapi.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +13,7 @@ import java.util.zip.GZIPInputStream;
 @Slf4j
 public class NvdHttpService {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     public NvdHttpService(RestTemplateBuilder restTemplateBuilder) {
         restTemplate = restTemplateBuilder.build();

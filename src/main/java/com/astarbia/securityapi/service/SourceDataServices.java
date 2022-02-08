@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SourceDataServices {
 
-    private NvdPopulatorService nvdPopulatorService;
+    private final NvdPopulatorService nvdPopulatorService;
 
     public SourceDataServices(NvdPopulatorService nvdPopulatorService) {
         this.nvdPopulatorService = nvdPopulatorService;

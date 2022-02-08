@@ -19,10 +19,10 @@ import java.util.zip.GZIPInputStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class NvdIT extends IntTestBase {
+class NvdIT extends IntTestBase {
 
     @Test
-    public void getIncidentsContainsRealRecentNVDData() throws IOException {
+    void getIncidentsContainsRealRecentNVDData() throws IOException {
         byte[] responseBody = Unirest.get("https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-recent.json.gz")
                 .asBytes()
                 .getBody();

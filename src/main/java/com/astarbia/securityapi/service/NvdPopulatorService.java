@@ -6,8 +6,6 @@ import com.astarbia.securityapi.repo.IncidentRepo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,12 +13,11 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class NvdPopulatorService {
+    private static final long TWO_HOUR_MS = 1000 * 60 * 2L;
     private final IncidentRepo incidentRepo;
     private final NvdHttpService nvdHttpService;
-    private long lastRefreshedTime = 0;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    private static final long TWO_HOUR_MS = 1000 * 60 * 2;
+    private long lastRefreshedTime = 0;
 
     public NvdPopulatorService(IncidentRepo incidentRepo, NvdHttpService nvdHttpService) {
         this.incidentRepo = incidentRepo;
@@ -66,11 +63,12 @@ public class NvdPopulatorService {
         // TODO: Add test around this text being here
         String description = "No English Description Found";
 
-        int descriptionCount = cveItem.get("cve").get("description").get("description_data").size();
+        JsonNode descriptionDataList = cveItem.get("cve").get("description").get("description_data");
+        int descriptionCount = descriptionDataList.size();
         for (int i = 0; i < descriptionCount; i++) {
-            String lang = cveItem.get("cve").get("description").get("description_data").get(i).get("lang").asText();
+            String lang = descriptionDataList.get(i).get("lang").asText();
             if (lang.equals("en")) {
-                description = cveItem.get("cve").get("description").get("description_data").get(i).get("value").asText();
+                description = descriptionDataList.get(i).get("value").asText();
             }
         }
 

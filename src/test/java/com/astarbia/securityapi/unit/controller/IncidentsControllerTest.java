@@ -7,10 +7,10 @@ import com.astarbia.securityapi.service.SourceDataServices;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class IncidentsControllerTest {
+class IncidentsControllerTest {
 
     @Test
-    public void nvdsAreUpdatedWhenGettingIncidents() {
+    void nvdsAreUpdatedWhenGettingIncidents() {
         IncidentRepo incidentRepo = new IncidentRepo();
         NvdPopulatorService nvdPopulatorService = Mockito.mock(NvdPopulatorService.class);
         SourceDataServices sourceDataServices = new SourceDataServices(nvdPopulatorService);

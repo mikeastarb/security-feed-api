@@ -4,19 +4,16 @@ import com.astarbia.securityapi.exception.RangeOutOfBoundsException;
 import com.astarbia.securityapi.model.Incident;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class IncidentTest {
+class IncidentTest {
 
     @ParameterizedTest(name = "{index} => latitude={0}")
     @ValueSource(doubles = {-90.1, 90.1})
-    public void latitudeCannotBeSetOutOfBounds(double latitude) {
+    void latitudeCannotBeSetOutOfBounds(double latitude) {
         Incident incident = getTestIncident();
         assertThrows(RangeOutOfBoundsException.class, () -> {
             incident.setLatitude(latitude);
@@ -25,7 +22,7 @@ public class IncidentTest {
 
     @ParameterizedTest(name = "{index} => latitude={0}")
     @ValueSource(doubles = {-90, 0, 90})
-    public void latitudeCanBeSetInBounds(double latitude) throws RangeOutOfBoundsException {
+    void latitudeCanBeSetInBounds(double latitude) throws RangeOutOfBoundsException {
         Incident incident = getTestIncident();
         incident.setLatitude(latitude);
         assertThat(incident.getLatitude()).isEqualTo(latitude);
@@ -33,7 +30,7 @@ public class IncidentTest {
 
     @ParameterizedTest(name = "{index} => longitude={0}")
     @ValueSource(doubles = {-180, 0, 180})
-    public void longitudeCanBeSetInBounds(double longitude) throws RangeOutOfBoundsException {
+    void longitudeCanBeSetInBounds(double longitude) throws RangeOutOfBoundsException {
         Incident incident = getTestIncident();
         incident.setLongitude(longitude);
         assertThat(incident.getLongitude()).isEqualTo(longitude);
@@ -41,7 +38,7 @@ public class IncidentTest {
 
     @ParameterizedTest(name = "{index} => longitude={0}")
     @ValueSource(doubles = {-180.1, 180.1})
-    public void longitudeCannotBeSetOutOfBounds(double longitude) {
+    void longitudeCannotBeSetOutOfBounds(double longitude) {
         Incident incident = getTestIncident();
         assertThrows(RangeOutOfBoundsException.class, () -> {
             incident.setLongitude(longitude);
@@ -49,7 +46,7 @@ public class IncidentTest {
     }
 
     @Test
-    public void settingInvalidLatitudeDoesNotOverwriteValue() {
+    void settingInvalidLatitudeDoesNotOverwriteValue() {
         Incident incident = getTestIncident();
 
         try {
@@ -63,7 +60,7 @@ public class IncidentTest {
     }
 
     @Test
-    public void settingInvalidLongitudeDoesNotOverwriteValue() {
+    void settingInvalidLongitudeDoesNotOverwriteValue() {
         Incident incident = getTestIncident();
 
         try {

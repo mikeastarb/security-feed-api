@@ -8,8 +8,6 @@ import com.astarbia.securityapi.model.response.IncidentListResponse;
 import com.astarbia.securityapi.repo.IncidentRepo;
 import com.astarbia.securityapi.service.SourceDataServices;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

@@ -8,8 +8,6 @@ import com.astarbia.securityapi.model.response.IncidentListResponse;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -20,15 +18,15 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IncidentsIT extends IntTestBase {
+class IncidentsIT extends IntTestBase {
 
     @Test
-    public void incidentReadEndpointIsResponsive() {
+    void incidentReadEndpointIsResponsive() {
         assertThat(Unirest.get(buildUrl("/incidents")).asJson().getStatus()).isEqualTo(200);
     }
 
     @Test
-    public void postEndpointForIncidentsIsResponsive() {
+    void postEndpointForIncidentsIsResponsive() {
         Incident incident = new Incident(UUID.randomUUID().toString(),
                 "CUSTOM", "This is a Description", "2022-02-01T16:15Z", "2022-02-01T16:15Z");
         int responseCode = Unirest.post(buildUrl("/incidents"))
@@ -40,7 +38,7 @@ public class IncidentsIT extends IntTestBase {
     }
 
     @Test
-    public void postIncidentReturnsIncidentCreated() {
+    void postIncidentReturnsIncidentCreated() {
         Incident incident = new Incident(UUID.randomUUID().toString(), "CUSTOM", "This is a Description", "Test", "Test");
         HttpResponse<Incident> incidentHttpResponse = Unirest.post(buildUrl("/incidents"))
                 .body(incident)
@@ -51,7 +49,7 @@ public class IncidentsIT extends IntTestBase {
     }
 
     @Test
-    public void postIncidentWithMinimalDetails() {
+    void postIncidentWithMinimalDetails() {
         String randomIDString = UUID.randomUUID().toString();
         String incidentWithMinimalDetailJson = "{\"sourceID\":\"" + randomIDString + "\",\"sourceCode\":\"CUSTOM\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
         Incident incident = new Incident(randomIDString, "CUSTOM", "This is a Description", "Test", "Test");
@@ -64,7 +62,7 @@ public class IncidentsIT extends IntTestBase {
     }
 
     @Test
-    public void postedIncidentIsAvailableViaRead() {
+    void postedIncidentIsAvailableViaRead() {
         Incident incident = new Incident(UUID.randomUUID().toString(), "CUSTOM", "This is a Description", "Test", "Test");
         Unirest.post(buildUrl("/incidents"))
                 .body(incident)
@@ -79,7 +77,7 @@ public class IncidentsIT extends IntTestBase {
     }
 
     @Test
-    public void postIncidentWithTooFewDetailsFails() {
+    void postIncidentWithTooFewDetailsFails() {
         String randomIDString = UUID.randomUUID().toString();
         String incidentWithTooFewDetails = "{\"sourceID\":\"" + randomIDString + "\",\"description\":\"This is a Description\",\"publishedDate\":\"Test\",\"lastModifiedDate\":\"Test\"}";
         HttpResponse<String> stringHttpResponse = Unirest.post(buildUrl("/incidents"))
@@ -97,7 +95,7 @@ public class IncidentsIT extends IntTestBase {
     }
 
     @Test
-    public void cannotPostTheSameIncidentTwice() {
+    void cannotPostTheSameIncidentTwice() {
         String randomIDString = UUID.randomUUID().toString();
         Incident first = new Incident(randomIDString, "CUSTOM", "Something", "Different", "Here");
         Incident second = new Incident(randomIDString, "CUSTOM", "Testing", "Other", "Things");
@@ -123,7 +121,7 @@ public class IncidentsIT extends IntTestBase {
     }
 
     @Test
-    public void addIncidentWithLocationData() throws RangeOutOfBoundsException {
+    void addIncidentWithLocationData() throws RangeOutOfBoundsException {
         Incident incident = new Incident(UUID.randomUUID().toString(), "test", "test", "test", "test");
         incident.setLongitude(15);
         incident.setLatitude(-23.4);
@@ -138,7 +136,7 @@ public class IncidentsIT extends IntTestBase {
     }
 
     @Test
-    public void incidentsReturnLatestPublishedFirst() {
+    void incidentsReturnLatestPublishedFirst() {
         IncidentListResponse response = Unirest.get(buildUrl("/incidents"))
                 .asObject(IncidentListResponse.class)
                 .getBody();
