@@ -25,7 +25,7 @@ class IncidentsPagingIT extends IntTestBase {
                 .asObject(IncidentListResponse.class)
                 .getBody();
 
-        assertThat(response.getIncidents().size()).isEqualTo(10);
+        assertThat(response.getIncidents()).hasSize(10);
     }
 
     @ParameterizedTest

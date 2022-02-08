@@ -40,8 +40,7 @@ class IncidentsFilterIT extends IntTestBase {
             }
         }
 
-        assertThat(uniqueIncidentTypes).hasSize(1);
-        assertThat(uniqueIncidentTypes).doesNotContain("NVD");
+        assertThat(uniqueIncidentTypes).hasSize(1).doesNotContain("NVD");
     }
 
     @Test

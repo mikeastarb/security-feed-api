@@ -27,13 +27,13 @@ class IncidentListResponseTest {
     @Test
     void listResponseStartsEmpty() {
         IncidentListResponse incidentListResponse = new IncidentListResponse();
-        assertThat(incidentListResponse.getTotalIncidents()).isEqualTo(0);
+        assertThat(incidentListResponse.getTotalIncidents()).isZero();
     }
 
     @Test
     void settingListToNullResetsToEmpty() {
         IncidentListResponse incidentListResponse = new IncidentListResponse();
         incidentListResponse.setIncidents(null);
-        assertThat(incidentListResponse.getResponseCount()).isEqualTo(0);
+        assertThat(incidentListResponse.getResponseCount()).isZero();
     }
 }
