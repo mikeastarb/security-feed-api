@@ -34,7 +34,7 @@ public class IncidentsPagingIT extends IntTestBase {
         HttpResponse<String> responseObject = Unirest.get(buildUrl("/incidents?size=" + size))
                 .asString();
 
-        assertThat(responseObject.getStatus()).isEqualTo(400);
+        assertThat(responseObject.getStatus()).isEqualTo(500);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class IncidentsPagingIT extends IntTestBase {
         HttpResponse<String> responseObject = Unirest.get(buildUrl("/incidents?size=10&page=-1"))
                 .asString();
 
-        assertThat(responseObject.getStatus()).isEqualTo(400);
+        assertThat(responseObject.getStatus()).isEqualTo(500);
     }
 
     @Test

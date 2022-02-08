@@ -16,7 +16,7 @@ public class IncidentsControllerTest {
         SourceDataServices sourceDataServices = new SourceDataServices(nvdPopulatorService);
 
         IncidentsController controller = new IncidentsController(incidentRepo, sourceDataServices);
-        controller.getAllIncidents("200", "0");
+        controller.getAllIncidents(200, 0);
 
         Mockito.verify(nvdPopulatorService, Mockito.times(1)).refreshNvds();
     }
