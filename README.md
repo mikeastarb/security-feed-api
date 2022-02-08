@@ -29,6 +29,18 @@ tools to run the suites, or you can invoke the following command on the command 
 
 `mvn verify`
 
+## Building the Docker Image
+
+In order to build the docker image locally, please execute the following from the project root
+
+`docker build -t mikeastarb/security-feed-api .`
+
+## Running the Built Docker Image
+
+Once the docker image is built, you can run the image locally with a command similar to the following
+
+`docker run --name security-feed -p 8080:8080 -d mikeastarb/security-feed-api`
+
 # API Usage
 
 The main functionality provided by this tool is the GET /incidents end-point which returns a set of information about
