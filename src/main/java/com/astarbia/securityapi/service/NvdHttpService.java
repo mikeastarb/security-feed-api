@@ -20,6 +20,7 @@ public class NvdHttpService {
     }
 
     public String getRecentCveDataString() throws IOException {
+        log.info("Getting the latest CVE Recent data set from NVD");
         byte[] response = restTemplate.getForObject("https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-recent.json.gz", byte[].class);
         try {
             return new String(new GZIPInputStream(new ByteArrayInputStream(response)).readAllBytes());

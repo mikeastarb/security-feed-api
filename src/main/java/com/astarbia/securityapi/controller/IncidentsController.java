@@ -35,6 +35,7 @@ public class IncidentsController {
     public IncidentListResponse getAllIncidents(@PathVariable(name = "code") Optional<String> codeParam,
                                                 @Valid @RequestParam(name = "size", required = false, defaultValue = "200") @Min(1) int sizeParam,
                                                 @Valid @RequestParam(name = "page", required = false, defaultValue = "0") @Min(0) int pageParam) {
+        log.info("Getting all incidents with user pagination and code filtering");
         sourceDataServices.refreshAllDataSources(); // TODO: Move this processing to a separate thread to keep API responsive
 
         int size = Math.min(sizeParam, 200);
@@ -62,6 +63,7 @@ public class IncidentsController {
     @GetMapping(value = "/incidents/{code}/{id}", produces = {"application/json"})
     public Incident getIncident(@PathVariable(name = "code") String code,
                                 @PathVariable(name = "id") String id) {
+        log.info("Getting an individual incident by code/ID pair");
         Optional<Incident> filterResult = incidentRepo.getIncidents().stream()
                 .filter(incident -> incident.getSourceID().equals(id) && incident.getSourceCode().equals(code))
                 .findAny();
@@ -76,6 +78,7 @@ public class IncidentsController {
     @PostMapping(value = "/incidents", produces = {"application/json"})
     @ResponseStatus(HttpStatus.CREATED)
     public Incident addNewIncident(@Valid @RequestBody Incident incident) {
+        log.info("Adding a new incident to the repository");
         try {
             return incidentRepo.addIncident(incident);
         } catch (DuplicateValueException e) {

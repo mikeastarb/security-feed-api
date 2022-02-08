@@ -31,6 +31,7 @@ public class NvdPopulatorService {
     }
 
     public boolean refreshNvds(long timeDelta) {
+        log.info("Refreshing NVDs");
         if (timeDelta < TWO_HOUR_MS) {
             log.info("Not refreshing NVDs yet, hasn't been two hours");
             return false;
