@@ -1,6 +1,8 @@
 # Security Feed API
 
 [![Build Status](https://github.com/mikeastarb/security-feed-api/actions/workflows/build.yml/badge.svg)](https://github.com/mikeastarb/security-feed-api/actions/workflows/build.yml)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mikeastarb_security-feed-api&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mikeastarb_security-feed-api)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mikeastarb_security-feed-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mikeastarb_security-feed-api)
 
 This is an application that reads the National Vulnerability Database feeds for new vulnerabilities and makes that data
 available over an HTTP API. The LOG.md file has more details about what the project is, what it's goals are, and what
