@@ -1,5 +1,6 @@
 package com.astarbia.securityapi.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -11,8 +12,8 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 @Service
+@Slf4j
 public class NvdHttpService {
-    private static final Logger logger = LoggerFactory.getLogger(NvdHttpService.class);
 
     private RestTemplate restTemplate;
 
@@ -25,7 +26,7 @@ public class NvdHttpService {
         try {
             return new String(new GZIPInputStream(new ByteArrayInputStream(response)).readAllBytes());
         } catch (IOException e) {
-            logger.error("Could not read gzip file from NVD. Returning empty data set");
+            log.error("Could not read gzip file from NVD. Returning empty data set");
             throw e;
         }
     }

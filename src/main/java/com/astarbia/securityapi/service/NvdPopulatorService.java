@@ -5,6 +5,7 @@ import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.repo.IncidentRepo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
+@Slf4j
 public class NvdPopulatorService {
-    private static final Logger logger = LoggerFactory.getLogger(NvdPopulatorService.class);
     private final IncidentRepo incidentRepo;
     private final NvdHttpService nvdHttpService;
     private long lastRefreshedTime = 0;
@@ -34,7 +35,7 @@ public class NvdPopulatorService {
 
     public boolean refreshNvds(long timeDelta) {
         if (timeDelta < TWO_HOUR_MS) {
-            logger.info("Not refreshing NVDs yet, hasn't been two hours");
+            log.info("Not refreshing NVDs yet, hasn't been two hours");
             return false;
         }
 
@@ -42,7 +43,7 @@ public class NvdPopulatorService {
         try {
             jsonNode = objectMapper.readTree(nvdHttpService.getRecentCveDataString());
         } catch (IOException e) {
-            logger.error("Unable to parse the JSON String returned by the service. No processing will be done", e);
+            log.error("Unable to parse the JSON String returned by the service. No processing will be done", e);
             return false;
         }
 
@@ -52,7 +53,7 @@ public class NvdPopulatorService {
             try {
                 incidentRepo.addIncident(newIncident);
             } catch (DuplicateValueException e) {
-                logger.warn("Attempted to add a duplicate CVE on last refresh; ignoring", e);
+                log.warn("Attempted to add a duplicate CVE on last refresh; ignoring", e);
             }
         }
 

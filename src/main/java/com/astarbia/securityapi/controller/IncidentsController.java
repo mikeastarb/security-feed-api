@@ -7,6 +7,7 @@ import com.astarbia.securityapi.model.Incident;
 import com.astarbia.securityapi.model.response.IncidentListResponse;
 import com.astarbia.securityapi.repo.IncidentRepo;
 import com.astarbia.securityapi.service.SourceDataServices;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,8 @@ import java.util.List;
 
 @RestController
 @Validated
+@Slf4j
 public class IncidentsController {
-    private static final Logger logger = LoggerFactory.getLogger(IncidentsController.class);
-
     private final IncidentRepo incidentRepo;
     private final SourceDataServices sourceDataServices;
 
@@ -52,10 +52,7 @@ public class IncidentsController {
 
     @PostMapping(value = "/incidents", produces = {"application/json"})
     @ResponseStatus(HttpStatus.CREATED)
-    public Incident addNewIncident(@RequestBody Incident incident) {
-        if (!incident.isValid()) {
-            throw new BadRequestException("A required field was missing from the request body for a new incident");
-        }
+    public Incident addNewIncident(@Valid @RequestBody Incident incident) {
         try {
             return incidentRepo.addIncident(incident);
         } catch (DuplicateValueException e) {
