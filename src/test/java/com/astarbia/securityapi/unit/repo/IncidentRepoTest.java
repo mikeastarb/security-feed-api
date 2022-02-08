@@ -14,7 +14,7 @@ class IncidentRepoTest {
 
     @Test
     void newRepoStartsEmpty() {
-        assertThat(new IncidentRepo().getIncidents().size()).isZero();
+        assertThat(new IncidentRepo().getIncidents()).isEmpty();
     }
 
     @Test
